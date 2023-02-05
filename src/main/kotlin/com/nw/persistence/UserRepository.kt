@@ -1,7 +1,9 @@
 package com.nw.persistence
 
+import com.nw.jwtConfig
 import com.nw.models.User
 import com.nw.models.Users
+import com.nw.security.JwtConfig
 import com.nw.security.hash
 import kotlinx.coroutines.runBlocking
 import org.jetbrains.exposed.sql.ResultRow
@@ -19,13 +21,11 @@ class UserRepository : UserFacade {
     private fun resultRowToUser(row: ResultRow) =
         User(
             id = row[Users.id],
-            name = row[Users.name],
+            fullName = row[Users.fullName],
             email = row[Users.email],
-            isEmailVerified = row[Users.isEmailVerified],
-            createdAt = row[Users.createdAt],
-            updatedAt = row[Users.updatedAt],
             username = row[Users.username],
-            password = row[Users.password]
+            password = row[Users.password],
+            authToken = row[Users.authToken],
         )
 
     override suspend fun allUsers(): List<User> = DatabaseFactory.dbQuery {
@@ -57,13 +57,12 @@ class UserRepository : UserFacade {
     override suspend fun addNewUser(user: User): User? {
         return transaction {
             Users.insert {
-                it[name] = user.name
+                it[fullName] = user.fullName
                 it[email] = user.email
-                it[isEmailVerified] = user.isEmailVerified
-                it[createdAt] = user.createdAt
-                it[updatedAt] = user.updatedAt
                 it[username] = user.username
                 it[password] = hash(password = user.password)
+                val token = jwtConfig.generateToken(JwtConfig.JwtUser(userId = user!!.id, userName = user.username, email = user.email))
+                it[authToken] = token
             }.let {
                 user.copy(id = it[Users.id])
             }
@@ -73,12 +72,11 @@ class UserRepository : UserFacade {
     override suspend fun editUser(user: User): Boolean {
         return transaction {
             Users.update({ Users.id eq user.id }) {
-                it[name] = user.name
+                it[fullName] = user.fullName
                 it[email] = user.email
-                it[isEmailVerified] = user.isEmailVerified
-                it[updatedAt] = user.updatedAt
                 it[username] = user.username
                 it[password] = user.password
+                it[authToken] = user.authToken
             }.let { it > 0 }
         }
     }

@@ -3,50 +3,24 @@ package com.nw.models
 import com.nw.utils.offsetDateTime
 import org.jetbrains.exposed.sql.Table
 import java.time.OffsetDateTime
-import java.util.concurrent.atomic.AtomicInteger
 
 data class User(
     val id: Int,
-    val name: String,
+    val fullName: String,
     val email: String,
-    val isEmailVerified: Boolean,
-    val createdAt: OffsetDateTime,
-    val updatedAt: OffsetDateTime,
     val username: String,
-    val password: String
-) {
-    companion object {
-        private val idCounter = AtomicInteger()
-        fun newUser(
-            name: String,
-            email: String,
-            isEmailVerified: Boolean,
-            createdAt: OffsetDateTime,
-            updatedAt: OffsetDateTime,
-            username: String,
-            password: String
-        ) = User(
-            idCounter.getAndIncrement(),
-            name,
-            email,
-            isEmailVerified,
-            createdAt,
-            updatedAt,
-            username,
-            password
-        )
-    }
-}
+    val password: String,
+    var authToken: String?,
+)
 
 object Users : Table() {
     val id = integer("id").autoIncrement()
-    val name = varchar("name", length = 50)
+    val fullName = varchar("full_name", length = 50)
     val email = varchar("email", length = 100)
-    val isEmailVerified = bool("is_email_verified")
-    val createdAt = offsetDateTime("created_at")
-    val updatedAt = offsetDateTime("updated_at")
+    val createdAt = offsetDateTime("created_at").clientDefault { OffsetDateTime.now() }
     val username = varchar("username", length = 50)
     val password = varchar("password", length = 100)
+    val authToken = varchar("auth_token", length = 2064).nullable()
 
     override val primaryKey = PrimaryKey(id)
 }
