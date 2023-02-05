@@ -30,9 +30,11 @@ fun Application.configureTag() {
                 }
             }
             post {
-                val tag = call.receive<Tag>()
-                tagFacade.addNewTag(tag)
-                call.respond(HttpStatusCode.Created, tag)
+                val tagName = call.receive<String>()
+                val tag: Tag? = tagFacade.addNewTag(tagName)
+                if (tag != null) {
+                    call.respond(HttpStatusCode.Created, tag)
+                }
             }
 
             delete("{id}") {

@@ -30,7 +30,6 @@ data class Book(
     var comment: String,
     var readStatus: ReadStatusEnum,
     var addedOnDate: OffsetDateTime,
-    var tags: String
 ) {
     companion object {
         private val idCounter = AtomicInteger()
@@ -55,7 +54,6 @@ data class Book(
             comment: String,
             readStatus: ReadStatusEnum,
             addedOnDate: OffsetDateTime,
-            tags: String
         ) = Book(
             idCounter.getAndIncrement(),
             isbn10,
@@ -78,7 +76,6 @@ data class Book(
             comment,
             readStatus,
             addedOnDate,
-            tags
         )
     }
 }
@@ -105,7 +102,6 @@ object Books : Table() {
     val comment = varchar("comment", 128)
     val readStatus = enumerationByName("readStatus", 128, ReadStatusEnum::class)
     val addedOnDate = offsetDateTime("addedOnDate")
-    val tags = varchar("tags", 128)
 
     override val primaryKey = PrimaryKey(id)
 }

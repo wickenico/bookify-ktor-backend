@@ -28,14 +28,17 @@ class TagRepository : TagFacade {
             .singleOrNull()
     }
 
-    override suspend fun addNewTag(tag: Tag): Tag? {
-        return transaction {
-            Tags.insert {
-                it[name] = tag.name
-            }.let {
-                tag.copy(id = it[Tags.id])
-            }
+    override suspend fun findTagByName(name: String): Tag? = DatabaseFactory.dbQuery {
+        Tags.select { Tags.name eq name }
+            .map(::resultRowToTag)
+            .singleOrNull()
+    }
+
+    override suspend fun addNewTag(name: String): Tag? = DatabaseFactory.dbQuery {
+        val insertStatement = Tags.insert {
+            it[Tags.name] = name
         }
+        insertStatement.resultedValues?.singleOrNull()?.let(::resultRowToTag)
     }
 
     override suspend fun deleteTag(id: Int): Boolean {

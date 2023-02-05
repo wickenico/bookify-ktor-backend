@@ -157,9 +157,6 @@ fun Application.configureGoogleBooksApiSearch() {
                 // Added On Date
                 var addedOnDate = OffsetDateTime.now()
 
-                // Tags
-                var tags = ""
-
                 client.close()
                 val book = bookFacade.addNewBook(
                     isbn10,
@@ -182,7 +179,6 @@ fun Application.configureGoogleBooksApiSearch() {
                     comment,
                     ReadStatusEnum.getByValue(readStatus),
                     addedOnDate,
-                    tags
                 )
 
                 if (book != null) {
