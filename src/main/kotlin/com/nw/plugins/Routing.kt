@@ -4,6 +4,7 @@ import com.nw.models.Book
 import com.nw.models.BookTag
 import com.nw.persistence.bookFacade
 import com.nw.persistence.bookTagFacade
+import com.nw.persistence.tagFacade
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.Application
 import io.ktor.server.application.call
@@ -53,7 +54,8 @@ fun Application.configureRouting() {
                 val bookId = call.parameters.getOrFail<Int>("id").toInt()
                 val bookTags: List<BookTag> = bookTagFacade.findAllBookTagsByBookId(bookId)
                 if (bookTags.isNotEmpty()) {
-                    call.respond(bookTags)
+                    val tagList = tagFacade.getTagListFromBookTags(bookTags)
+                    call.respond(tagList)
                 } else {
                     call.respond("No Tags for Book $bookId found.")
                 }

@@ -1,5 +1,6 @@
 package com.nw.persistence
 
+import com.nw.models.BookTag
 import com.nw.models.Tag
 import com.nw.models.Tags
 import kotlinx.coroutines.runBlocking
@@ -28,6 +29,11 @@ class TagRepository : TagFacade {
             .singleOrNull()
     }
 
+    override suspend fun findTagById(id: List<Int>): List<Tag> = DatabaseFactory.dbQuery {
+        Tags.select { Tags.id inList id }
+            .map(::resultRowToTag)
+    }
+
     override suspend fun findTagByName(name: String): Tag? = DatabaseFactory.dbQuery {
         Tags.select { Tags.name eq name }
             .map(::resultRowToTag)
@@ -45,6 +51,11 @@ class TagRepository : TagFacade {
         return transaction {
             Tags.deleteWhere { Tags.id eq id } > 0
         }
+    }
+
+    override suspend fun getTagListFromBookTags(bookTags: List<BookTag>): List<Tag> {
+        val tagIds = bookTags.map { it.tagId }
+        return tagFacade.findTagById(tagIds)
     }
 }
 
