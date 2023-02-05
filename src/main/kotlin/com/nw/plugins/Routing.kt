@@ -62,8 +62,12 @@ fun Application.configureRouting() {
             post("{id}/tags/add") {
                 val bookId = call.parameters.getOrFail<Int>("id").toInt()
                 val tagName = call.receive<String>()
-                bookTagFacade.addTagToBook(bookId, tagName)
-                call.respond(HttpStatusCode.Created, "Tag $tagName added to book.")
+                val bookTag = bookTagFacade.addTagToBook(bookId, tagName)
+                if (bookTag != null) {
+                    call.respond(HttpStatusCode.Created, "Tag $tagName added to book.")
+                } else {
+                    call.respond(HttpStatusCode.Conflict, "Tag $tagName already assigned to book.")
+                }
             }
         }
     }

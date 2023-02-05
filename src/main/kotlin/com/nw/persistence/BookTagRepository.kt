@@ -2,10 +2,9 @@ package com.nw.persistence
 
 import com.nw.models.BookTag
 import com.nw.models.BookTags
-import com.nw.models.Tag
-import com.nw.models.Tags
 import kotlinx.coroutines.runBlocking
 import org.jetbrains.exposed.sql.ResultRow
+import org.jetbrains.exposed.sql.andWhere
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.selectAll
@@ -15,11 +14,6 @@ class BookTagRepository : BookTagFacade {
     private fun resultRowToBookTag(row: ResultRow) = BookTag(
         bookId = row[BookTags.bookId],
         tagId = row[BookTags.tagId],
-    )
-
-    private fun resultRowToTag(row: ResultRow) = Tag(
-        id = row[Tags.id],
-        name = row[Tags.name]
     )
 
     override suspend fun getAllBookTags(): List<BookTag> = DatabaseFactory.dbQuery {
@@ -36,17 +30,27 @@ class BookTagRepository : BookTagFacade {
             tag.id
         }
 
-        val insertStatement = BookTags.insert {
-            it[BookTags.bookId] = bookId
-            it[BookTags.tagId] = tagId
-        }
+        if (!checkIfBookTagExists(bookId, tagId)) {
+            val insertStatement = BookTags.insert {
+                it[BookTags.bookId] = bookId
+                it[BookTags.tagId] = tagId
+            }
 
-        insertStatement.resultedValues?.singleOrNull()?.let(::resultRowToBookTag)
+            insertStatement.resultedValues?.singleOrNull()?.let(::resultRowToBookTag)
+        } else null
     }
 
     override suspend fun findAllBookTagsByBookId(bookId: Int): List<BookTag> = DatabaseFactory.dbQuery {
         BookTags.select { BookTags.bookId eq bookId }
             .map(::resultRowToBookTag)
+    }
+
+    private suspend fun checkIfBookTagExists(bookId: Int, tagId: Int): Boolean {
+        return DatabaseFactory.dbQuery {
+            BookTags.select { BookTags.bookId eq bookId }
+                .andWhere { BookTags.tagId eq tagId }
+                .count() > 0
+        }
     }
 }
 
