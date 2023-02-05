@@ -3,6 +3,7 @@ package com.nw.persistence
 import com.nw.const.Constants
 import com.nw.models.BookTags
 import com.nw.models.Books
+import com.nw.models.Favorites
 import com.nw.models.Tags
 import com.nw.models.Users
 import kotlinx.coroutines.Dispatchers
@@ -22,7 +23,7 @@ object DatabaseFactory {
         val database = Database.connect(jdbcURL, driverClassName, user, password)
         transaction(database) {
             addLogger(StdOutSqlLogger)
-            SchemaUtils.create(Books, Users, Tags, BookTags)
+            SchemaUtils.create(Books, Users, Tags, BookTags, Favorites)
         }
     }
 
