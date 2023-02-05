@@ -2,6 +2,7 @@ package com.nw.persistence
 
 import com.nw.models.User
 import com.nw.models.Users
+import com.nw.security.hash
 import kotlinx.coroutines.runBlocking
 import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
@@ -62,7 +63,7 @@ class UserRepository : UserFacade {
                 it[createdAt] = user.createdAt
                 it[updatedAt] = user.updatedAt
                 it[username] = user.username
-                it[password] = user.password
+                it[password] = hash(password = user.password)
             }.let {
                 user.copy(id = it[Users.id])
             }
@@ -86,6 +87,13 @@ class UserRepository : UserFacade {
         return transaction {
             Users.deleteWhere { Users.id eq id } > 0
         }
+    }
+
+    override suspend fun getUser(username: String, password: String): User? = DatabaseFactory.dbQuery {
+        Users.select { Users.username eq username }
+            .andWhere { Users.password eq password }
+            .map(::resultRowToUser)
+            .singleOrNull()
     }
 }
 

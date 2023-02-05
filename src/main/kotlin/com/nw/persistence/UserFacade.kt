@@ -10,4 +10,5 @@ interface UserFacade {
     suspend fun addNewUser(user: User): User?
     suspend fun editUser(user: User): Boolean
     suspend fun deleteUser(id: Int): Boolean
+    suspend fun getUser(username: String, password: String): User?
 }

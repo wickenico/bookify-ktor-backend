@@ -60,6 +60,10 @@ dependencies {
 
     implementation("io.ktor:ktor-server-auth:$ktor_version")
     implementation("io.ktor:ktor-server-auth-jwt:$ktor_version")
+    implementation("org.testng:testng:7.1.0")
+    implementation("org.testng:testng:7.1.0")
+    implementation("org.testng:testng:7.1.0")
+    implementation("io.ktor:ktor-server-auth-jwt-jvm:2.2.3")
 
     testImplementation("io.ktor:ktor-server-tests-jvm:$ktor_version")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")
