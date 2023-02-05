@@ -1,5 +1,6 @@
 package com.nw.persistence
 
+import com.nw.models.BookTag
 import com.nw.models.Tag
 import com.nw.models.Tags
 import kotlinx.coroutines.runBlocking
@@ -28,20 +29,33 @@ class TagRepository : TagFacade {
             .singleOrNull()
     }
 
-    override suspend fun addNewTag(tag: Tag): Tag? {
-        return transaction {
-            Tags.insert {
-                it[name] = tag.name
-            }.let {
-                tag.copy(id = it[Tags.id])
-            }
+    override suspend fun findTagById(id: List<Int>): List<Tag> = DatabaseFactory.dbQuery {
+        Tags.select { Tags.id inList id }
+            .map(::resultRowToTag)
+    }
+
+    override suspend fun findTagByName(name: String): Tag? = DatabaseFactory.dbQuery {
+        Tags.select { Tags.name eq name }
+            .map(::resultRowToTag)
+            .singleOrNull()
+    }
+
+    override suspend fun addNewTag(name: String): Tag? = DatabaseFactory.dbQuery {
+        val insertStatement = Tags.insert {
+            it[Tags.name] = name
         }
+        insertStatement.resultedValues?.singleOrNull()?.let(::resultRowToTag)
     }
 
     override suspend fun deleteTag(id: Int): Boolean {
         return transaction {
             Tags.deleteWhere { Tags.id eq id } > 0
         }
+    }
+
+    override suspend fun getTagListFromBookTags(bookTags: List<BookTag>): List<Tag> {
+        val tagIds = bookTags.map { it.tagId }
+        return tagFacade.findTagById(tagIds)
     }
 }
 

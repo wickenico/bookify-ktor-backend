@@ -30,7 +30,6 @@ interface BookFacade {
         comment: String,
         readStatus: ReadStatusEnum,
         addedOnDate: OffsetDateTime,
-        tags: String
     ): Book?
     suspend fun editBook(
         id: Int,
@@ -54,7 +53,6 @@ interface BookFacade {
         comment: String,
         readStatus: ReadStatusEnum,
         addedOnDate: OffsetDateTime,
-        tags: String
     ): Boolean
     suspend fun deleteBook(id: Int): Boolean
 

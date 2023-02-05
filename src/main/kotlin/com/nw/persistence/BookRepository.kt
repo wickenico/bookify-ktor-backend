@@ -40,7 +40,6 @@ class BookRepository : BookFacade {
         comment = row[Books.comment],
         readStatus = row[Books.readStatus],
         addedOnDate = row[Books.addedOnDate],
-        tags = row[Books.tags],
     )
 
     override suspend fun allBooks(): List<Book> = DatabaseFactory.dbQuery {
@@ -82,7 +81,6 @@ class BookRepository : BookFacade {
         comment: String,
         readStatus: ReadStatusEnum,
         addedOnDate: OffsetDateTime,
-        tags: String
     ): Book? = DatabaseFactory.dbQuery {
         val insertStatement = Books.insert {
             it[Books.isbn10] = isbn10
@@ -105,7 +103,6 @@ class BookRepository : BookFacade {
             it[Books.comment] = comment
             it[Books.readStatus] = ReadStatusEnum.getByValue(readStatus.status)
             it[Books.addedOnDate] = addedOnDate
-            it[Books.tags] = tags
         }
         insertStatement.resultedValues?.singleOrNull()?.let(::resultRowToBook)
     }
@@ -132,7 +129,6 @@ class BookRepository : BookFacade {
         comment: String,
         readStatus: ReadStatusEnum,
         addedOnDate: OffsetDateTime,
-        tags: String
     ): Boolean = DatabaseFactory.dbQuery {
         Books.update({ Books.id eq id }) {
             it[Books.isbn10] = isbn10
@@ -155,7 +151,6 @@ class BookRepository : BookFacade {
             it[Books.comment] = comment
             it[Books.readStatus] = ReadStatusEnum.getByValue(readStatus.status)
             it[Books.addedOnDate] = addedOnDate
-            it[Books.tags] = tags
         } > 0
     }
 
