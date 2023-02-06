@@ -22,6 +22,9 @@ fun Application.authRoutes() {
         route("/api/v1/auth") {
             post("/register") {
                 val user: User = call.receive()
+                if (userFacade.checkIfUsernameExists(user.username)) {
+                    call.respond(HttpStatusCode.Conflict, "Username already taken.")
+                }
                 val newUser = userFacade.addNewUser(user)
                 call.respond(HttpStatusCode.Created, newUser!!)
             }

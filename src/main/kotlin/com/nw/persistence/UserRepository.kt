@@ -93,6 +93,15 @@ class UserRepository : UserFacade {
             .map(::resultRowToUser)
             .singleOrNull()
     }
+
+    override suspend fun checkIfUsernameExists(username: String): Boolean {
+        return DatabaseFactory.dbQuery {
+            val count = Users.select { Users.username eq username }
+                .count()
+
+            count > 0
+        }
+    }
 }
 
 val userFacade: UserFacade = UserRepository().apply {
