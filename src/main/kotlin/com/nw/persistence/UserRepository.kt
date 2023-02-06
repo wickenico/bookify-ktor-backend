@@ -89,7 +89,7 @@ class UserRepository : UserFacade {
 
     override suspend fun getUser(username: String, password: String): User? = DatabaseFactory.dbQuery {
         Users.select { Users.username eq username }
-            .andWhere { Users.password eq password }
+            .andWhere { Users.password eq hash( password) }
             .map(::resultRowToUser)
             .singleOrNull()
     }

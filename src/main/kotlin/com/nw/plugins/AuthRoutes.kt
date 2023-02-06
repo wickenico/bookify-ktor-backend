@@ -4,6 +4,7 @@ import com.nw.models.User
 import com.nw.persistence.userFacade
 import com.nw.security.JwtConfig
 import com.nw.security.LoginBody
+import com.nw.security.hash
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.Application
 import io.ktor.server.application.call
@@ -34,8 +35,6 @@ fun Application.authRoutes() {
                 } else {
                     call.respond(user)
                 }
-
-                // val token = jwtConfig.generateToken(JwtConfig.JwtUser(userId = user!!.id, userName = user.name, email = user.email))
             }
 
             authenticate {

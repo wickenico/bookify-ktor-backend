@@ -33,7 +33,6 @@ fun Application.module() {
 
     configureHTTP()
     configureSerialization()
-    // configureDatabases()
     DatabaseFactory.init()
     configureMonitoring()
     configureStatusPages()

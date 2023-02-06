@@ -1,0 +1,516 @@
+openapi: 3.0.3
+info:
+  description: com_nw_bookify_ktor_backend API
+  title: com_nw_bookify_ktor_backend API
+  version: 1.0.0
+servers:
+- url: https://com_nw_bookify_ktor_backend
+paths:
+  /:
+    get:
+      responses:
+        "200":
+          content:
+            text/plain:
+              examples:
+                Example#1:
+                  value: Hello World!
+              schema:
+                type: string
+          description: OK
+      x-accepts: text/plain
+  /api/v1/books:
+    get:
+      responses:
+        "200":
+          content:
+            '*/*':
+              schema:
+                items:
+                  $ref: '#/components/schemas/Book'
+                type: array
+          description: OK
+      x-accepts: '*/*'
+  /api/v1/books/{id}:
+    delete:
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      responses:
+        "400":
+          content:
+            '*/*':
+              schema:
+                type: object
+          description: Bad Request
+        "202":
+          content:
+            text/plain:
+              examples:
+                Example#1:
+                  value: ""
+              schema:
+                type: string
+          description: Accepted
+        "404":
+          content:
+            text/plain:
+              examples:
+                Example#1:
+                  value: ""
+              schema:
+                type: string
+          description: Not Found
+      x-accepts: '*/*,text/plain'
+    get:
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Book'
+          description: OK
+      x-accepts: '*/*'
+  /json/jackson:
+    get:
+      responses:
+        "200":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Map'
+          description: OK
+      x-accepts: '*/*'
+  /json/kotlinx-serialization:
+    get:
+      responses:
+        "200":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Map'
+          description: OK
+      x-accepts: '*/*'
+  /session/increment:
+    get:
+      responses:
+        "200":
+          content:
+            text/plain:
+              examples:
+                Example#1:
+                  value: ""
+              schema:
+                type: string
+          description: OK
+      x-accepts: text/plain
+  /users:
+    post:
+      description: Create user
+      responses:
+        "201":
+          content:
+            '*/*':
+              schema:
+                format: int32
+                type: integer
+          description: Created
+      x-accepts: '*/*'
+  /users/{id}:
+    delete:
+      description: Delete user
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      responses:
+        "200":
+          content:
+            '*/*':
+              schema:
+                type: object
+          description: OK
+      x-accepts: '*/*'
+    get:
+      description: Read user
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      responses:
+        "200":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/User'
+          description: OK
+        "404":
+          content:
+            '*/*':
+              schema:
+                type: object
+          description: Not Found
+      x-accepts: '*/*'
+    put:
+      description: Update user
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      responses:
+        "200":
+          content:
+            '*/*':
+              schema:
+                type: object
+          description: OK
+      x-accepts: '*/*'
+  /api/v1/search:
+    get:
+      parameters:
+      - explode: true
+        in: query
+        name: isbn
+        required: false
+        schema:
+          type: number
+        style: form
+      responses:
+        "200":
+          content:
+            text/plain:
+              examples:
+                Example#1:
+                  value: /error
+              schema:
+                type: string
+          description: OK <br> Redirect
+        "409":
+          content:
+            text/plain:
+              schema:
+                type: string
+          description: Conflict
+        "201":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Book'
+          description: Created
+      x-accepts: '*/*,text/plain'
+  /api/v1/tags:
+    get:
+      responses:
+        "200":
+          content:
+            '*/*':
+              schema:
+                items:
+                  $ref: '#/components/schemas/Tag'
+                type: array
+          description: OK
+      x-accepts: '*/*'
+    post:
+      responses:
+        "201":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Tag'
+          description: Created
+      x-accepts: '*/*'
+  /api/v1/tags/{id}:
+    delete:
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      responses:
+        "400":
+          content:
+            '*/*':
+              schema:
+                type: object
+          description: Bad Request
+        "202":
+          content:
+            text/plain:
+              examples:
+                Example#1:
+                  value: ""
+              schema:
+                type: string
+          description: Accepted
+        "404":
+          content:
+            text/plain:
+              examples:
+                Example#1:
+                  value: ""
+              schema:
+                type: string
+          description: Not Found
+      x-accepts: '*/*,text/plain'
+    get:
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Tag'
+          description: OK
+      x-accepts: '*/*'
+  /api/v1/registration:
+    post:
+      responses:
+        "201":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/User'
+          description: Created
+      x-accepts: '*/*'
+  /api/v1/users:
+    get:
+      responses:
+        "200":
+          content:
+            '*/*':
+              schema:
+                items:
+                  $ref: '#/components/schemas/User'
+                type: array
+          description: OK
+      x-accepts: '*/*'
+  /api/v1/users/{id}:
+    delete:
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: integer
+        style: simple
+      responses:
+        "400":
+          content:
+            '*/*':
+              schema:
+                type: object
+          description: Bad Request
+        "202":
+          content:
+            text/plain:
+              examples:
+                Example#1:
+                  value: ""
+              schema:
+                type: string
+          description: Accepted
+        "404":
+          content:
+            text/plain:
+              examples:
+                Example#1:
+                  value: ""
+              schema:
+                type: string
+          description: Not Found
+      x-accepts: '*/*,text/plain'
+    get:
+      parameters:
+      - explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/User'
+          description: OK
+      x-accepts: '*/*'
+components:
+  schemas:
+    Book:
+      example:
+        readStatus: Companion
+        printType: Companion
+        author: author
+        rating: Companion
+        description: description
+        language: language
+        title: title
+        selfLink: selfLink
+        tags: tags
+        pages: 6
+        isbn13: isbn13
+        subtitle: subtitle
+        imageUrl: imageUrl
+        publisher: publisher
+        isbn10: isbn10
+        comment: comment
+        id: 0
+        publishedDate: 2000-01-23T04:56:07.000+00:00
+        addedOnDate: 2000-01-23T04:56:07.000+00:00
+        category: category
+        maturityRating: maturityRating
+        infoLink: infoLink
+      properties:
+        id:
+          format: int32
+          type: integer
+        isbn10:
+          type: string
+        isbn13:
+          type: string
+        title:
+          type: string
+        subtitle:
+          type: string
+        author:
+          type: string
+        publisher:
+          type: string
+        pages:
+          format: int32
+          type: integer
+        imageUrl:
+          type: string
+        selfLink:
+          type: string
+        publishedDate:
+          format: date-time
+          type: string
+        description:
+          type: string
+        printType:
+          enum:
+          - Companion
+          - type
+          - BOOK
+          - EBOOK
+          - MAGAZINE
+          type: string
+        category:
+          type: string
+        maturityRating:
+          type: string
+        language:
+          type: string
+        infoLink:
+          type: string
+        rating:
+          enum:
+          - Companion
+          - rating
+          - ZERO
+          - ONE
+          - TWO
+          - THREE
+          - FOUR
+          - FIVE
+          type: string
+        comment:
+          type: string
+        readStatus:
+          enum:
+          - Companion
+          - status
+          - UNREAD
+          - READING
+          - READ
+          - UNFINISHED
+          type: string
+        addedOnDate:
+          format: date-time
+          type: string
+        tags:
+          type: string
+      type: object
+    Map:
+      example: {}
+      properties: {}
+      type: object
+    User:
+      example:
+        createdAt: 2000-01-23T04:56:07.000+00:00
+        password: password
+        name: name
+        id: 0
+        email: email
+        updatedAt: 2000-01-23T04:56:07.000+00:00
+        username: username
+      properties:
+        id:
+          format: int32
+          type: integer
+        name:
+          type: string
+        email:
+          type: string
+        createdAt:
+          format: date-time
+          type: string
+        updatedAt:
+          format: date-time
+          type: string
+        username:
+          type: string
+        password:
+          type: string
+      type: object
+    Tag:
+      example:
+        name: name
+        id: 0
+      properties:
+        id:
+          format: int32
+          type: integer
+        name:
+          type: string
+      type: object
+

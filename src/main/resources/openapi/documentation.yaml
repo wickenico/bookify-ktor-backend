@@ -6,6 +6,45 @@ info:
 servers:
 - url: "https://com_nw_bookify_ktor_backend"
 paths:
+  /api/v1/auth/login:
+    post:
+      description: ""
+      responses:
+        "401":
+          description: "Unauthorized"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: "Invalid Credentials"
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/User"
+  /api/v1/auth/me:
+    get:
+      description: ""
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/JwtUser"
+  /api/v1/auth/register:
+    post:
+      description: ""
+      responses:
+        "201":
+          description: "Created"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/User"
   /:
     get:
       description: ""
@@ -80,27 +119,54 @@ paths:
             '*/*':
               schema:
                 $ref: "#/components/schemas/Book"
-  /json/jackson:
+  /api/v1/books/{id}/tags:
     get:
       description: ""
+      parameters:
+      - name: "id"
+        in: "path"
+        required: true
+        schema:
+          type: "string"
       responses:
         "200":
           description: "OK"
           content:
             '*/*':
               schema:
-                $ref: "#/components/schemas/Map"
-  /json/kotlinx-serialization:
-    get:
+                type: "object"
+              examples:
+                Example#1:
+                  value: ""
+  /api/v1/books/{id}/tags/add:
+    post:
       description: ""
+      parameters:
+      - name: "id"
+        in: "path"
+        required: true
+        schema:
+          type: "string"
       responses:
-        "200":
-          description: "OK"
+        "201":
+          description: "Created"
           content:
             '*/*':
               schema:
-                $ref: "#/components/schemas/Map"
-  /session/increment:
+                type: "string"
+              examples:
+                Example#1:
+                  value: ""
+        "409":
+          description: "Conflict"
+          content:
+            '*/*':
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: ""
+  /api/v1/session/increment:
     get:
       description: ""
       responses:
@@ -113,69 +179,6 @@ paths:
               examples:
                 Example#1:
                   value: ""
-  /users:
-    post:
-      description: "Create user"
-      responses:
-        "201":
-          description: "Created"
-          content:
-            '*/*':
-              schema:
-                type: "integer"
-                format: "int32"
-  /users/{id}:
-    delete:
-      description: "Delete user"
-      parameters:
-      - name: "id"
-        in: "path"
-        required: true
-        schema:
-          type: "integer"
-      responses:
-        "200":
-          description: "OK"
-          content:
-            '*/*':
-              schema:
-                type: "object"
-    get:
-      description: "Read user"
-      parameters:
-      - name: "id"
-        in: "path"
-        required: true
-        schema:
-          type: "integer"
-      responses:
-        "200":
-          description: "OK"
-          content:
-            '*/*':
-              schema:
-                $ref: "#/components/schemas/User"
-        "404":
-          description: "Not Found"
-          content:
-            '*/*':
-              schema:
-                type: "object"
-    put:
-      description: "Update user"
-      parameters:
-      - name: "id"
-        in: "path"
-        required: true
-        schema:
-          type: "integer"
-      responses:
-        "200":
-          description: "OK"
-          content:
-            '*/*':
-              schema:
-                type: "object"
   /api/v1/search:
     get:
       description: ""
@@ -277,16 +280,6 @@ paths:
             '*/*':
               schema:
                 $ref: "#/components/schemas/Tag"
-  /api/v1/registration:
-    post:
-      description: ""
-      responses:
-        "201":
-          description: "Created"
-          content:
-            '*/*':
-              schema:
-                $ref: "#/components/schemas/User"
   /api/v1/users:
     get:
       description: ""
@@ -348,8 +341,85 @@ paths:
             '*/*':
               schema:
                 $ref: "#/components/schemas/User"
+  /api/v1/favorites:
+    delete:
+      description: ""
+      responses:
+        "202":
+          description: "Accepted"
+          content:
+            text/plain:
+              schema:
+                type: "string"
+              examples:
+                Example#1:
+                  value: "Favorite unmarked."
+    get:
+      description: ""
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/Favorite"
+    post:
+      description: ""
+      responses:
+        "201":
+          description: "Created"
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/Favorite"
+  /api/v1/favorites/{userId}:
+    get:
+      description: ""
+      parameters:
+      - name: "userId"
+        in: "path"
+        required: true
+        schema:
+          type: "string"
+      responses:
+        "200":
+          description: "OK"
+          content:
+            '*/*':
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/Favorite"
 components:
   schemas:
+    User:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int32"
+        fullName:
+          type: "string"
+        email:
+          type: "string"
+        username:
+          type: "string"
+        password:
+          type: "string"
+        authToken:
+          type: "string"
+    JwtUser:
+      type: "object"
+      properties:
+        userId:
+          type: "integer"
+          format: "int32"
+        userName:
+          type: "string"
+        email:
+          type: "string"
     Book:
       type: "object"
       properties:
@@ -421,31 +491,6 @@ components:
         addedOnDate:
           type: "string"
           format: "date-time"
-        tags:
-          type: "string"
-    Map:
-      type: "object"
-      properties: {}
-    User:
-      type: "object"
-      properties:
-        id:
-          type: "integer"
-          format: "int32"
-        name:
-          type: "string"
-        email:
-          type: "string"
-        createdAt:
-          type: "string"
-          format: "date-time"
-        updatedAt:
-          type: "string"
-          format: "date-time"
-        username:
-          type: "string"
-        password:
-          type: "string"
     Tag:
       type: "object"
       properties:
@@ -454,3 +499,15 @@ components:
           format: "int32"
         name:
           type: "string"
+    Favorite:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+          format: "int32"
+        userId:
+          type: "integer"
+          format: "int32"
+        bookId:
+          type: "integer"
+          format: "int32"
