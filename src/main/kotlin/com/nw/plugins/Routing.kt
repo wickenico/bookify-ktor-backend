@@ -8,6 +8,7 @@ import com.nw.persistence.tagFacade
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.Application
 import io.ktor.server.application.call
+import io.ktor.server.auth.authenticate
 import io.ktor.server.request.receive
 import io.ktor.server.response.respond
 import io.ktor.server.response.respondText
@@ -22,53 +23,56 @@ fun Application.configureRouting() {
 
     routing {
 
-        get("/") {
-            call.respondText("Hello World!")
-        }
+        authenticate {
 
-        route("/api/v1/books") {
-            get {
-                val books = bookFacade.allBooks()
-                call.respond(books)
+            get("/") {
+                call.respondText("Hello World!")
             }
 
-            get("{id}") {
-                val id = call.parameters.getOrFail<Int>("id").toInt()
-                val book: Book? = bookFacade.book(id)
-                if (book != null) {
-                    call.respond(book)
+            route("/api/v1/books") {
+                get {
+                    val books = bookFacade.allBooks()
+                    call.respond(books)
                 }
-            }
 
-            delete("{id}") {
-                val id = call.parameters["id"]?.toInt() ?: return@delete call.respond(HttpStatusCode.BadRequest)
-                if (bookFacade.book(id) != null) {
-                    bookFacade.deleteBook(id)
-                    call.respondText("Book $id successfully removed.", status = HttpStatusCode.Accepted)
-                } else {
-                    call.respondText("Book $id not found", status = HttpStatusCode.NotFound)
+                get("{id}") {
+                    val id = call.parameters.getOrFail<Int>("id").toInt()
+                    val book: Book? = bookFacade.book(id)
+                    if (book != null) {
+                        call.respond(book)
+                    }
                 }
-            }
 
-            get("{id}/tags") {
-                val bookId = call.parameters.getOrFail<Int>("id").toInt()
-                val bookTags: List<BookTag> = bookTagFacade.findAllBookTagsByBookId(bookId)
-                if (bookTags.isNotEmpty()) {
-                    val tagList = tagFacade.getTagListFromBookTags(bookTags)
-                    call.respond(tagList)
-                } else {
-                    call.respond("No Tags for Book $bookId found.")
+                delete("{id}") {
+                    val id = call.parameters["id"]?.toInt() ?: return@delete call.respond(HttpStatusCode.BadRequest)
+                    if (bookFacade.book(id) != null) {
+                        bookFacade.deleteBook(id)
+                        call.respondText("Book $id successfully removed.", status = HttpStatusCode.Accepted)
+                    } else {
+                        call.respondText("Book $id not found", status = HttpStatusCode.NotFound)
+                    }
                 }
-            }
 
-            post("{id}/tags/add") {
-                val bookId = call.parameters.getOrFail<Int>("id").toInt()
-                val tagName = call.receive<String>()
-                val bookTag = bookTagFacade.addTagToBook(bookId, tagName)
-                if (bookTag != null) {
-                    call.respond(HttpStatusCode.Created, "Tag $tagName added to book.")
-                } else {
-                    call.respond(HttpStatusCode.Conflict, "Tag $tagName already assigned to book.")
+                get("{id}/tags") {
+                    val bookId = call.parameters.getOrFail<Int>("id").toInt()
+                    val bookTags: List<BookTag> = bookTagFacade.findAllBookTagsByBookId(bookId)
+                    if (bookTags.isNotEmpty()) {
+                        val tagList = tagFacade.getTagListFromBookTags(bookTags)
+                        call.respond(tagList)
+                    } else {
+                        call.respond("No Tags for Book $bookId found.")
+                    }
+                }
+
+                post("{id}/tags/add") {
+                    val bookId = call.parameters.getOrFail<Int>("id").toInt()
+                    val tagName = call.receive<String>()
+                    val bookTag = bookTagFacade.addTagToBook(bookId, tagName)
+                    if (bookTag != null) {
+                        call.respond(HttpStatusCode.Created, "Tag $tagName added to book.")
+                    } else {
+                        call.respond(HttpStatusCode.Conflict, "Tag $tagName already assigned to book.")
+                    }
                 }
             }
         }

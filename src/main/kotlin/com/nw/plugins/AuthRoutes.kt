@@ -4,7 +4,6 @@ import com.nw.models.User
 import com.nw.persistence.userFacade
 import com.nw.security.JwtConfig
 import com.nw.security.LoginBody
-import com.nw.security.hash
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.Application
 import io.ktor.server.application.call

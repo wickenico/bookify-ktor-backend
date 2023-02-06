@@ -14,5 +14,8 @@ fun Application.configureStatusPages() {
         status(HttpStatusCode.NotFound) { call, status ->
             call.respondText(text = "404: Not Found", status = status)
         }
+        status(HttpStatusCode.Unauthorized) { call, status ->
+            call.respondText(text = "401: Unauthorized request.", status = status)
+        }
     }
 }

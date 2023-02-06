@@ -61,7 +61,7 @@ class UserRepository : UserFacade {
                 it[email] = user.email
                 it[username] = user.username
                 it[password] = hash(password = user.password)
-                val token = jwtConfig.generateToken(JwtConfig.JwtUser(userId = user!!.id, userName = user.username, email = user.email))
+                val token = jwtConfig.generateToken(JwtConfig.JwtUser(userId = user.id, userName = user.username, email = user.email))
                 it[authToken] = token
             }.let {
                 user.copy(id = it[Users.id])
@@ -89,7 +89,7 @@ class UserRepository : UserFacade {
 
     override suspend fun getUser(username: String, password: String): User? = DatabaseFactory.dbQuery {
         Users.select { Users.username eq username }
-            .andWhere { Users.password eq hash( password) }
+            .andWhere { Users.password eq hash(password) }
             .map(::resultRowToUser)
             .singleOrNull()
     }

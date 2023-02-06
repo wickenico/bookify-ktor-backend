@@ -3,6 +3,7 @@ package com.nw
 import com.nw.persistence.DatabaseFactory
 import com.nw.plugins.authRoutes
 import com.nw.plugins.configureDocumentation
+import com.nw.plugins.configureFavorites
 import com.nw.plugins.configureGoogleBooksApiSearch
 import com.nw.plugins.configureHTTP
 import com.nw.plugins.configureMonitoring
@@ -43,4 +44,5 @@ fun Application.module() {
     configureUser()
     configureTag()
     configureGoogleBooksApiSearch()
+    configureFavorites()
 }
