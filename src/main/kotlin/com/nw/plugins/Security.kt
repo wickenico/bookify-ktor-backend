@@ -18,6 +18,8 @@ fun Application.configureSecurity() {
     install(Sessions) {
         cookie<MySession>("MY_SESSION") {
             cookie.extensions["SameSite"] = "lax"
+            cookie.path = "/"
+            cookie.maxAgeInSeconds = 3600
         }
     }
     routing {

@@ -10,7 +10,7 @@ plugins {
     kotlin("jvm") version "1.8.10"
     id("io.ktor.plugin") version "2.2.3"
     id("org.jetbrains.kotlin.plugin.serialization") version "1.8.10"
-    id("org.jlleitschuh.gradle.ktlint") version "11.0.0"
+    id("org.jlleitschuh.gradle.ktlint") version "11.1.0"
 }
 
 group = "com.nw"
@@ -49,8 +49,7 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed-core:$exposed_version")
     implementation("org.jetbrains.exposed:exposed-jdbc:$exposed_version")
 
-    implementation("com.h2database:h2:$h2_version")
-    implementation("mysql:mysql-connector-java:8.0.31")
+    implementation("mysql:mysql-connector-java:8.0.32")
 
     implementation("ch.qos.logback:logback-classic:$logback_version")
     implementation("io.ktor:ktor-server-openapi:$ktor_version")
@@ -60,9 +59,7 @@ dependencies {
 
     implementation("io.ktor:ktor-server-auth:$ktor_version")
     implementation("io.ktor:ktor-server-auth-jwt:$ktor_version")
-    implementation("org.testng:testng:7.1.0")
-    implementation("org.testng:testng:7.1.0")
-    implementation("org.testng:testng:7.1.0")
+    implementation("org.testng:testng:7.7.0")
     implementation("io.ktor:ktor-server-auth-jwt-jvm:2.2.3")
 
     testImplementation("io.ktor:ktor-server-tests-jvm:$ktor_version")
