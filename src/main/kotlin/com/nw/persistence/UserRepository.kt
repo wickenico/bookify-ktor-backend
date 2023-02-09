@@ -1,7 +1,9 @@
 package com.nw.persistence
 
 import com.nw.jwtConfig
+import com.nw.models.Book
 import com.nw.models.User
+import com.nw.models.UserBook
 import com.nw.models.Users
 import com.nw.security.JwtConfig
 import com.nw.security.hash
@@ -101,6 +103,11 @@ class UserRepository : UserFacade {
 
             count > 0
         }
+    }
+
+    override suspend fun getBookListFromUserBooks(userBooks: List<UserBook>): List<Book> {
+        val bookIds = userBooks.map { it.bookId }
+        return bookFacade.findBookById(bookIds)
     }
 }
 

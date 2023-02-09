@@ -1,15 +1,20 @@
 package com.nw.plugins
 
 import com.nw.models.User
+import com.nw.models.UserBook
+import com.nw.persistence.bookFacade
+import com.nw.persistence.userBookFacade
 import com.nw.persistence.userFacade
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.Application
 import io.ktor.server.application.call
 import io.ktor.server.auth.authenticate
+import io.ktor.server.request.receive
 import io.ktor.server.response.respond
 import io.ktor.server.response.respondText
 import io.ktor.server.routing.delete
 import io.ktor.server.routing.get
+import io.ktor.server.routing.post
 import io.ktor.server.routing.route
 import io.ktor.server.routing.routing
 import io.ktor.server.util.getOrFail
@@ -36,6 +41,36 @@ fun Application.configureUser() {
                         call.respondText("User $id successfully removed.", status = HttpStatusCode.Accepted)
                     } else {
                         call.respondText("User $id not found", status = HttpStatusCode.NotFound)
+                    }
+                }
+
+                get("{id}/books") {
+                    val userId = call.parameters.getOrFail<Int>("id").toInt()
+                    val userBooks: List<UserBook> = userBookFacade.findAllUserBooksByUserId(userId)
+                    if (userBooks.isNotEmpty()) {
+                        val bookList = userFacade.getBookListFromUserBooks(userBooks)
+                        call.respond(bookList)
+                    } else {
+                        call.respond("No Books for User $userId found.")
+                    }
+                }
+
+                post("{id}/books/add") {
+                    val userId = call.parameters.getOrFail<Int>("id").toInt()
+                    val bookIdAsString = call.receive<String>()
+                    val intValue = bookIdAsString.toIntOrNull()
+                    if (intValue == null) {
+                        call.respond(HttpStatusCode.BadRequest, "Request body is not a valid integer.")
+                    }
+                    val bookId = bookIdAsString.toInt()
+                    if (bookFacade.book(bookId) == null) {
+                        call.respond(HttpStatusCode.Conflict, "Book $bookId not exists.")
+                    }
+                    val userBookRelation = userBookFacade.addBookToUser(userId, bookId)
+                    if (userBookRelation != null) {
+                        call.respond(HttpStatusCode.Created, "Book $bookId added to user.")
+                    } else {
+                        call.respond(HttpStatusCode.Conflict, "Book $bookId already assigned to user.")
                     }
                 }
             }

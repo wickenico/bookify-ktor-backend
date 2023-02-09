@@ -157,6 +157,11 @@ class BookRepository : BookFacade {
     override suspend fun deleteBook(id: Int): Boolean = DatabaseFactory.dbQuery {
         Books.deleteWhere { Books.id eq id } > 0
     }
+
+    override suspend fun findBookById(id: List<Int>): List<Book> = DatabaseFactory.dbQuery {
+        Books.select { Books.id inList id }
+            .map { resultRowToBook(it) }
+    }
 }
 
 val bookFacade: BookFacade = BookRepository().apply {
