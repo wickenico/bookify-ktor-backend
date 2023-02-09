@@ -7,12 +7,9 @@ import com.nw.utils.OffsetDateTimeDeserializer
 import com.nw.utils.OffsetDateTimeSerializer
 import io.ktor.serialization.jackson.jackson
 import io.ktor.server.application.Application
-import io.ktor.server.application.call
 import io.ktor.server.application.install
 import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
-import io.ktor.server.response.respond
 import io.ktor.server.routing.get
-import io.ktor.server.routing.routing
 import java.time.OffsetDateTime
 
 fun Application.configureSerialization() {
@@ -28,14 +25,6 @@ fun Application.configureSerialization() {
                         addDeserializer(OffsetDateTime::class.java, OffsetDateTimeDeserializer())
                     }
             )
-        }
-    }
-    routing {
-        get("/json/kotlinx-serialization") {
-            call.respond(mapOf("hello" to "world"))
-        }
-        get("/json/jackson") {
-            call.respond(mapOf("hello" to "world"))
         }
     }
 }

@@ -18,10 +18,12 @@ fun Application.configureSecurity() {
     install(Sessions) {
         cookie<MySession>("MY_SESSION") {
             cookie.extensions["SameSite"] = "lax"
+            cookie.path = "/"
+            cookie.maxAgeInSeconds = 3600
         }
     }
     routing {
-        get("/session/increment") {
+        get("/api/v1/session/increment") {
             val session = call.sessions.get<MySession>() ?: MySession()
             call.sessions.set(session.copy(count = session.count + 1))
             call.respondText("Counter is ${session.count}. Refresh to increment.")

@@ -1,6 +1,5 @@
 package com.nw.plugins
 
-import com.nw.jwtConfig
 import com.nw.models.User
 import com.nw.persistence.userFacade
 import com.nw.security.JwtConfig
@@ -23,8 +22,11 @@ fun Application.authRoutes() {
         route("/api/v1/auth") {
             post("/register") {
                 val user: User = call.receive()
-                userFacade.addNewUser(user)
-                call.respond(HttpStatusCode.Created, user)
+                if (userFacade.checkIfUsernameExists(user.username)) {
+                    call.respond(HttpStatusCode.Conflict, "Username already taken.")
+                }
+                val newUser = userFacade.addNewUser(user)
+                call.respond(HttpStatusCode.Created, newUser!!)
             }
 
             post("/login") {
@@ -32,10 +34,9 @@ fun Application.authRoutes() {
                 val user = userFacade.getUser(loginBody.username, loginBody.password)
                 if (user == null) {
                     call.respond(HttpStatusCode.Unauthorized, "Invalid Credentials")
+                } else {
+                    call.respond(user)
                 }
-
-                val token = jwtConfig.generateToken(JwtConfig.JwtUser(userId = user!!.id, userName = user.name, email = user.email))
-                call.respond(token)
             }
 
             authenticate {
