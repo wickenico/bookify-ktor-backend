@@ -26,8 +26,8 @@ class FavoriteRepository : FavoriteFacade {
 
     override suspend fun addNewFavorite(favorite: Favorite): Favorite? = DatabaseFactory.dbQuery {
         val insertStatement = Favorites.insert {
-            it[Favorites.userId] = userId
-            it[Favorites.bookId] = bookId
+            it[Favorites.userId] = favorite.userId
+            it[Favorites.bookId] = favorite.bookId
         }
         insertStatement.resultedValues?.singleOrNull()?.let(::resultRowToFavorite)
     }
@@ -38,6 +38,12 @@ class FavoriteRepository : FavoriteFacade {
                 (Favorites.userId eq userId) and (Favorites.bookId eq bookId)
             } > 0
         }
+    }
+
+    override suspend fun findFavoriteById(id: Int): Favorite? = DatabaseFactory.dbQuery {
+        Favorites.select { Favorites.id eq id }
+            .map { resultRowToFavorite(it) }
+            .singleOrNull()
     }
 
     override suspend fun findAllFavoritesByUserId(userId: Int): List<Favorite> = DatabaseFactory.dbQuery {

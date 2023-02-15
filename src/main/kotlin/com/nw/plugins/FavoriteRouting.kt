@@ -25,6 +25,14 @@ fun Application.configureFavorites() {
                     call.respond(favorites)
                 }
 
+                get("{favoriteId}") {
+                    val favId = call.parameters.getOrFail<Int>("favoriteId").toInt()
+                    val favorite = favoriteFacade.findFavoriteById(favId)
+                    if (favorite != null) {
+                        call.respond(favorite)
+                    }
+                }
+
                 get("{userId}") {
                     val userId = call.parameters.getOrFail<Int>("userId").toInt()
                     val favoriteList = favoriteFacade.findAllFavoritesByUserId(userId)
