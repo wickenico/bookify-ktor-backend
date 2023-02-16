@@ -10,7 +10,7 @@ data class User(
     val email: String,
     val username: String,
     val password: String,
-    var authToken: String?,
+    var authToken: String?
 )
 
 object Users : Table() {

@@ -4,7 +4,7 @@ import org.jetbrains.exposed.sql.Table
 
 data class BookTag(
     val bookId: Int,
-    val tagId: Int,
+    val tagId: Int
 )
 
 object BookTags : Table() {

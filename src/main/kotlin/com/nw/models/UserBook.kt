@@ -4,7 +4,7 @@ import org.jetbrains.exposed.sql.Table
 
 data class UserBook(
     val userId: Int,
-    val bookId: Int,
+    val bookId: Int
 )
 
 object UserBooks : Table() {

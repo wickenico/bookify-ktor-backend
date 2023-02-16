@@ -13,7 +13,7 @@ class UserBookRepository : UserBookFacade {
 
     private fun resultRowToUserBook(row: ResultRow) = UserBook(
         userId = row[UserBooks.userId],
-        bookId = row[UserBooks.bookId],
+        bookId = row[UserBooks.bookId]
     )
 
     override suspend fun getAllUserBooks(): List<UserBook> = DatabaseFactory.dbQuery {
@@ -26,14 +26,15 @@ class UserBookRepository : UserBookFacade {
     }
 
     override suspend fun addBookToUser(userId: Int, bookId: Int): UserBook? = DatabaseFactory.dbQuery {
-
         if (!checkIfUserBookExists(userId, bookId)) {
             val insertStatement = UserBooks.insert {
                 it[UserBooks.userId] = userId
                 it[UserBooks.bookId] = bookId
             }
             insertStatement.resultedValues?.singleOrNull()?.let { resultRowToUserBook(it) }
-        } else null
+        } else {
+            null
+        }
     }
 
     private suspend fun checkIfUserBookExists(userId: Int, bookId: Int): Boolean {

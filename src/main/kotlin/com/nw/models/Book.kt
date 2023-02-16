@@ -29,7 +29,7 @@ data class Book(
     var rating: RatingEnum,
     var comment: String,
     var readStatus: ReadStatusEnum,
-    var addedOnDate: OffsetDateTime,
+    var addedOnDate: OffsetDateTime
 ) {
     companion object {
         private val idCounter = AtomicInteger()
@@ -53,7 +53,7 @@ data class Book(
             rating: RatingEnum,
             comment: String,
             readStatus: ReadStatusEnum,
-            addedOnDate: OffsetDateTime,
+            addedOnDate: OffsetDateTime
         ) = Book(
             idCounter.getAndIncrement(),
             isbn10,
@@ -75,7 +75,7 @@ data class Book(
             rating,
             comment,
             readStatus,
-            addedOnDate,
+            addedOnDate
         )
     }
 }

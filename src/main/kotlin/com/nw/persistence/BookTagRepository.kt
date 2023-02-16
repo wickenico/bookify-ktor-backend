@@ -13,7 +13,7 @@ class BookTagRepository : BookTagFacade {
 
     private fun resultRowToBookTag(row: ResultRow) = BookTag(
         bookId = row[BookTags.bookId],
-        tagId = row[BookTags.tagId],
+        tagId = row[BookTags.tagId]
     )
 
     override suspend fun getAllBookTags(): List<BookTag> = DatabaseFactory.dbQuery {
@@ -21,7 +21,6 @@ class BookTagRepository : BookTagFacade {
     }
 
     override suspend fun addTagToBook(bookId: Int, tagName: String): BookTag? = DatabaseFactory.dbQuery {
-
         val tag = tagFacade.findTagByName(tagName)
         val tagId: Int = if (tag == null) {
             tagFacade.addNewTag(tagName)
@@ -37,7 +36,9 @@ class BookTagRepository : BookTagFacade {
             }
 
             insertStatement.resultedValues?.singleOrNull()?.let(::resultRowToBookTag)
-        } else null
+        } else {
+            null
+        }
     }
 
     override suspend fun findAllBookTagsByBookId(bookId: Int): List<BookTag> = DatabaseFactory.dbQuery {

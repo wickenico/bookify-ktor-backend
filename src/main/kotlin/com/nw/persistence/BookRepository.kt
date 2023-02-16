@@ -39,7 +39,7 @@ class BookRepository : BookFacade {
         rating = row[Books.rating],
         comment = row[Books.comment],
         readStatus = row[Books.readStatus],
-        addedOnDate = row[Books.addedOnDate],
+        addedOnDate = row[Books.addedOnDate]
     )
 
     override suspend fun allBooks(): List<Book> = DatabaseFactory.dbQuery {
@@ -80,7 +80,7 @@ class BookRepository : BookFacade {
         rating: RatingEnum,
         comment: String,
         readStatus: ReadStatusEnum,
-        addedOnDate: OffsetDateTime,
+        addedOnDate: OffsetDateTime
     ): Book? = DatabaseFactory.dbQuery {
         val insertStatement = Books.insert {
             it[Books.isbn10] = isbn10
@@ -128,7 +128,7 @@ class BookRepository : BookFacade {
         rating: RatingEnum,
         comment: String,
         readStatus: ReadStatusEnum,
-        addedOnDate: OffsetDateTime,
+        addedOnDate: OffsetDateTime
     ): Boolean = DatabaseFactory.dbQuery {
         Books.update({ Books.id eq id }) {
             it[Books.isbn10] = isbn10

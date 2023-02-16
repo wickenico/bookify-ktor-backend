@@ -13,7 +13,6 @@ import io.ktor.server.sessions.sessions
 import io.ktor.server.sessions.set
 
 fun Application.configureSecurity() {
-
     data class MySession(val count: Int = 0)
     install(Sessions) {
         cookie<MySession>("MY_SESSION") {

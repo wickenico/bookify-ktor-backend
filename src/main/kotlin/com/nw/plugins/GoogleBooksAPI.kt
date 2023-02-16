@@ -87,7 +87,6 @@ fun Application.configureGoogleBooksApiSearch() {
                     val message = "The book $isbn10 / $isbn13 already exists."
                     call.respondText(message, status = status)
                 } else {
-
                     // Title
                     var title = volumeInfoObject?.get("title").toString()
                     title = title.replace("\"", "")
@@ -180,7 +179,7 @@ fun Application.configureGoogleBooksApiSearch() {
                         RatingEnum.getByValue(rating),
                         comment,
                         ReadStatusEnum.getByValue(readStatus),
-                        addedOnDate,
+                        addedOnDate
                     )
 
                     if (book != null) {

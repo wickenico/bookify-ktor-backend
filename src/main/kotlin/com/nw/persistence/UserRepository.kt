@@ -27,7 +27,7 @@ class UserRepository : UserFacade {
             email = row[Users.email],
             username = row[Users.username],
             password = row[Users.password],
-            authToken = row[Users.authToken],
+            authToken = row[Users.authToken]
         )
 
     override suspend fun allUsers(): List<User> = DatabaseFactory.dbQuery {

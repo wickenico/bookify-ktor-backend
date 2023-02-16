@@ -17,7 +17,7 @@ class FavoriteRepository : FavoriteFacade {
     private fun resultRowToFavorite(row: ResultRow) = Favorite(
         id = row[Favorites.id],
         userId = row[Favorites.userId],
-        bookId = row[Favorites.bookId],
+        bookId = row[Favorites.bookId]
     )
 
     override suspend fun allFavorites(): List<Favorite> = DatabaseFactory.dbQuery {

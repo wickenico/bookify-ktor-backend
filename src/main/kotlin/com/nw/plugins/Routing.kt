@@ -20,11 +20,8 @@ import io.ktor.server.routing.routing
 import io.ktor.server.util.getOrFail
 
 fun Application.configureRouting() {
-
     routing {
-
         authenticate {
-
             get("/") {
                 call.respondText("Hello World!")
             }
