@@ -1,5 +1,8 @@
 package com.nw.plugins
 
+import com.nw.enums.PrintTypeEnum
+import com.nw.enums.RatingEnum
+import com.nw.enums.ReadStatusEnum
 import com.nw.models.Book
 import com.nw.models.BookTag
 import com.nw.persistence.bookFacade
@@ -37,6 +40,35 @@ fun Application.configureRouting() {
                     val book: Book? = bookFacade.book(id)
                     if (book != null) {
                         call.respond(book)
+                    }
+                }
+
+                post {
+                    val book = call.receive<Book>()
+                    val newBook: Book? = bookFacade.addNewBook(
+                        isbn10 = book.isbn10,
+                        isbn13 = book.isbn13,
+                        title = book.title,
+                        subtitle = book.subtitle,
+                        author = book.author,
+                        publisher = book.publisher,
+                        pages = book.pages,
+                        imageUrl = book.imageUrl,
+                        selfLink = book.selfLink,
+                        publishedDate = book.publishedDate,
+                        description = book.description,
+                        printType = PrintTypeEnum.getByValue(book.printType.toString()),
+                        category = book.category,
+                        maturityRating = book.maturityRating,
+                        language = book.language,
+                        infoLink = book.infoLink,
+                        rating = RatingEnum.getByString(book.rating.toString()),
+                        comment = book.comment,
+                        readStatus = ReadStatusEnum.getByValue(book.readStatus.toString()),
+                        addedOnDate = book.addedOnDate
+                    )
+                    if (newBook != null) {
+                        call.respond(HttpStatusCode.Created, newBook)
                     }
                 }
 

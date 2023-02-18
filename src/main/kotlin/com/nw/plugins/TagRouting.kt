@@ -1,6 +1,9 @@
 package com.nw.plugins
 
+import com.nw.models.BookTag
 import com.nw.models.Tag
+import com.nw.persistence.bookFacade
+import com.nw.persistence.bookTagFacade
 import com.nw.persistence.tagFacade
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.Application
@@ -46,6 +49,17 @@ fun Application.configureTag() {
                         call.respondText("Tag $id successfully removed.", status = HttpStatusCode.Accepted)
                     } else {
                         call.respondText("Tag $id not found", status = HttpStatusCode.NotFound)
+                    }
+                }
+
+                get("{id}/books") {
+                    val tagId = call.parameters.getOrFail<Int>("id").toInt()
+                    val bookTagList: List<BookTag> = bookTagFacade.findAllBookTagsByTagId(tagId)
+                    if (bookTagList.isNotEmpty()) {
+                        val bookList = bookFacade.getBookLIstFromBookTags(bookTagList)
+                        call.respond(bookList)
+                    } else {
+                        call.respond("No Books for Tag $tagId found.")
                     }
                 }
             }

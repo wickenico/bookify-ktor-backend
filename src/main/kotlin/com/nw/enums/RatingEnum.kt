@@ -13,5 +13,9 @@ enum class RatingEnum(val rating: Int) {
             return values().find { it.rating == rating }
                 ?: throw IllegalArgumentException("$rating is not a valid Rating.")
         }
+
+        fun getByString(value: String): RatingEnum {
+            return values().find { it.name == value } ?: ZERO
+        }
     }
 }

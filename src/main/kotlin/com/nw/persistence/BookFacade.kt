@@ -4,6 +4,7 @@ import com.nw.enums.PrintTypeEnum
 import com.nw.enums.RatingEnum
 import com.nw.enums.ReadStatusEnum
 import com.nw.models.Book
+import com.nw.models.BookTag
 import java.time.OffsetDateTime
 
 interface BookFacade {
@@ -56,6 +57,7 @@ interface BookFacade {
     ): Boolean
     suspend fun deleteBook(id: Int): Boolean
     suspend fun findBookById(id: List<Int>): List<Book>
+    suspend fun getBookLIstFromBookTags(bookTags: List<BookTag>): List<Book>
 
     suspend fun findBookByIsbn10orIsbn13(isbn10: String, isbn13: String): Book?
 }

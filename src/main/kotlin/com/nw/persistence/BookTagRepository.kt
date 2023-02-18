@@ -46,6 +46,11 @@ class BookTagRepository : BookTagFacade {
             .map(::resultRowToBookTag)
     }
 
+    override suspend fun findAllBookTagsByTagId(tagId: Int): List<BookTag> = DatabaseFactory.dbQuery {
+        BookTags.select { BookTags.tagId eq tagId }
+            .map { resultRowToBookTag(it) }
+    }
+
     private suspend fun checkIfBookTagExists(bookId: Int, tagId: Int): Boolean {
         return DatabaseFactory.dbQuery {
             BookTags.select { BookTags.bookId eq bookId }

@@ -3,6 +3,7 @@ package com.nw.plugins
 import com.nw.enums.PrintTypeEnum
 import com.nw.enums.RatingEnum
 import com.nw.enums.ReadStatusEnum
+import com.nw.models.Book
 import com.nw.persistence.bookFacade
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -159,7 +160,7 @@ fun Application.configureGoogleBooksApiSearch() {
                     var addedOnDate = OffsetDateTime.now()
 
                     client.close()
-                    val book = bookFacade.addNewBook(
+                    val book = Book.newBook(
                         isbn10,
                         isbn13,
                         title,
@@ -182,9 +183,7 @@ fun Application.configureGoogleBooksApiSearch() {
                         addedOnDate
                     )
 
-                    if (book != null) {
-                        call.respond(status = HttpStatusCode.Created, book)
-                    }
+                    call.respond(book)
                 }
             }
         }

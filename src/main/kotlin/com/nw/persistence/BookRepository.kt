@@ -4,6 +4,7 @@ import com.nw.enums.PrintTypeEnum
 import com.nw.enums.RatingEnum
 import com.nw.enums.ReadStatusEnum
 import com.nw.models.Book
+import com.nw.models.BookTag
 import com.nw.models.Books
 import kotlinx.coroutines.runBlocking
 import org.jetbrains.exposed.sql.ResultRow
@@ -161,6 +162,11 @@ class BookRepository : BookFacade {
     override suspend fun findBookById(id: List<Int>): List<Book> = DatabaseFactory.dbQuery {
         Books.select { Books.id inList id }
             .map { resultRowToBook(it) }
+    }
+
+    override suspend fun getBookLIstFromBookTags(bookTags: List<BookTag>): List<Book> {
+        val bookIds = bookTags.map { it.bookId }
+        return bookFacade.findBookById(bookIds)
     }
 }
 
