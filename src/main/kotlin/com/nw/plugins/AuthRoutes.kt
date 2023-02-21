@@ -27,9 +27,10 @@ fun Application.authRoutes() {
                 val user: User = call.receive()
                 if (userFacade.checkIfUsernameExists(user.username)) {
                     call.respond(HttpStatusCode.Conflict, "Username already taken.")
+                } else {
+                    val newUser = userFacade.addNewUser(user)
+                    call.respond(HttpStatusCode.Created, newUser!!)
                 }
-                val newUser = userFacade.addNewUser(user)
-                call.respond(HttpStatusCode.Created, newUser!!)
             }
 
             post("/login") {
