@@ -24,12 +24,14 @@ fun Application.configureHTTP() {
         allowHeader(HttpHeaders.ContentType)
         allowHeader("MyCustomHeader")
         anyHost() // @TODO: Don't do this in production if possible. Try to limit it.
-//        allowHeader(HttpHeaders.AccessControlAllowOrigin)
-//        allowHeader(HttpHeaders.ContentType)
-//        allowHeader(HttpHeaders.Accept)
-//        allowNonSimpleContentTypes = true
-//        allowCredentials = true
-//        allowSameOrigin = true
-//        allowHost("localhost:8090", listOf("http", "https"))
+        allowHeader(HttpHeaders.AccessControlAllowOrigin)
+        allowHeader(HttpHeaders.ContentType)
+        allowHeader(HttpHeaders.Accept)
+        allowNonSimpleContentTypes = true
+        allowCredentials = true
+        allowSameOrigin = true
+        allowHost("localhost:8090", listOf("http", "https"))
+        allowHost("localhost:8080", listOf("http", "https"))
+        allowHost("192.168.178.58:8090", listOf("http", "https"))
     }
 }

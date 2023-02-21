@@ -1,5 +1,3 @@
 package com.nw.auth
 
-import io.ktor.server.auth.Principal
-
-data class UserSession(val name: String) : Principal
+data class UserSession(val id: String, val count: Int)

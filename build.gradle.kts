@@ -24,6 +24,7 @@ application {
 
 repositories {
     mavenCentral()
+    maven { url = uri("https://maven.pkg.jetbrains.space/public/p/ktor/eap") }
 }
 
 dependencies {
@@ -38,7 +39,6 @@ dependencies {
     implementation("io.ktor:ktor-server-status-pages:$ktor_version")
     implementation("io.ktor:ktor-server-status-pages-jvm:$ktor_version")
     implementation("io.ktor:ktor-server-auth-jvm:$ktor_version")
-    implementation("io.ktor:ktor-server-sessions-jvm:$ktor_version")
     implementation("io.ktor:ktor-server-cio-jvm:$ktor_version")
 
     // Ktor Client
@@ -67,6 +67,9 @@ dependencies {
     // Security
     implementation("io.ktor:ktor-server-auth:$ktor_version")
     implementation("io.ktor:ktor-server-auth-jwt:$ktor_version")
+
+    // Cookies
+    implementation("io.ktor:ktor-server-sessions:$ktor_version")
 
     implementation("org.testng:testng:7.7.0")
     implementation("io.ktor:ktor-server-auth-jwt-jvm:2.2.3")

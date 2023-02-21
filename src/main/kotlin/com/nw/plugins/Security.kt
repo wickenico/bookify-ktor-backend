@@ -1,5 +1,6 @@
 package com.nw.plugins
 
+import com.nw.auth.UserSession
 import io.ktor.server.application.Application
 import io.ktor.server.application.call
 import io.ktor.server.application.install
@@ -13,17 +14,22 @@ import io.ktor.server.sessions.sessions
 import io.ktor.server.sessions.set
 
 fun Application.configureSecurity() {
-    data class MySession(val count: Int = 0)
     install(Sessions) {
-        cookie<MySession>("MY_SESSION") {
-            cookie.extensions["SameSite"] = "lax"
+        cookie<UserSession>("user_session") {
+            cookie.path = "/"
+            cookie.maxAgeInSeconds = 360000
+            cookie.secure = false
         }
     }
     routing {
         get("/api/v1/session/increment") {
-            val session = call.sessions.get<MySession>() ?: MySession()
-            call.sessions.set(session.copy(count = session.count + 1))
-            call.respondText("Counter is ${session.count}. Refresh to increment.")
+            val userSession = call.sessions.get<UserSession>()
+            if (userSession != null) {
+                call.sessions.set(userSession.copy(count = userSession.count + 1))
+                call.respondText("Session ID is ${userSession.id}. Reload count is ${userSession.count}.")
+            } else {
+                call.respondText("Session doesn't exist or is expired.")
+            }
         }
     }
 }

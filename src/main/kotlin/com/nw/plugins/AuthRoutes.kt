@@ -1,5 +1,6 @@
 package com.nw.plugins
 
+import com.nw.auth.UserSession
 import com.nw.models.User
 import com.nw.persistence.userFacade
 import com.nw.security.JwtConfig
@@ -16,6 +17,8 @@ import io.ktor.server.routing.get
 import io.ktor.server.routing.post
 import io.ktor.server.routing.route
 import io.ktor.server.routing.routing
+import io.ktor.server.sessions.sessions
+import io.ktor.server.sessions.set
 
 fun Application.authRoutes() {
     routing {
@@ -35,6 +38,7 @@ fun Application.authRoutes() {
                 if (user == null) {
                     call.respond(HttpStatusCode.Unauthorized, "Invalid Credentials")
                 } else {
+                    call.sessions.set(UserSession(id = user.id.toString(), count = 5))
                     call.respond(user)
                 }
             }
