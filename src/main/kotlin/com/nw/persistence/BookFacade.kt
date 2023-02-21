@@ -57,7 +57,7 @@ interface BookFacade {
     ): Boolean
     suspend fun deleteBook(id: Int): Boolean
     suspend fun findBookById(id: List<Int>): List<Book>
-    suspend fun getBookLIstFromBookTags(bookTags: List<BookTag>): List<Book>
+    suspend fun getBookListFromBookTags(bookTags: List<BookTag>): List<Book>
 
     suspend fun findBookByIsbn10orIsbn13(isbn10: String, isbn13: String): Book?
 }

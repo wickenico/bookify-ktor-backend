@@ -27,6 +27,7 @@ repositories {
 }
 
 dependencies {
+    // Ktor Server
     implementation("io.ktor:ktor-server-default-headers-jvm:$ktor_version")
     implementation("io.ktor:ktor-server-core-jvm:$ktor_version")
     implementation("io.ktor:ktor-server-content-negotiation-jvm:$ktor_version")
@@ -40,25 +41,33 @@ dependencies {
     implementation("io.ktor:ktor-server-sessions-jvm:$ktor_version")
     implementation("io.ktor:ktor-server-cio-jvm:$ktor_version")
 
+    // Ktor Client
     implementation("io.ktor:ktor-client-cio-jvm:$ktor_version")
     implementation("io.ktor:ktor-client-content-negotiation:$ktor_version")
 
+    // Serialization
     implementation("io.ktor:ktor-serialization-kotlinx-json-jvm:$ktor_version")
     implementation("io.ktor:ktor-serialization-jackson-jvm:$ktor_version")
 
+    // Exposed SQL
     implementation("org.jetbrains.exposed:exposed-core:$exposed_version")
     implementation("org.jetbrains.exposed:exposed-jdbc:$exposed_version")
 
+    // DB Connector
     implementation("mysql:mysql-connector-java:8.0.32")
 
+    // Logging
     implementation("ch.qos.logback:logback-classic:$logback_version")
+
+    // Swagger and OpenAPI
     implementation("io.ktor:ktor-server-openapi:$ktor_version")
     implementation("io.swagger.codegen.v3:swagger-codegen-generators:$swagger_codegen_version")
-
     implementation("io.ktor:ktor-server-swagger:$ktor_version")
 
+    // Security
     implementation("io.ktor:ktor-server-auth:$ktor_version")
     implementation("io.ktor:ktor-server-auth-jwt:$ktor_version")
+
     implementation("org.testng:testng:7.7.0")
     implementation("io.ktor:ktor-server-auth-jwt-jvm:2.2.3")
 

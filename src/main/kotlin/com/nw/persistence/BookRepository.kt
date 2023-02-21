@@ -164,7 +164,7 @@ class BookRepository : BookFacade {
             .map { resultRowToBook(it) }
     }
 
-    override suspend fun getBookLIstFromBookTags(bookTags: List<BookTag>): List<Book> {
+    override suspend fun getBookListFromBookTags(bookTags: List<BookTag>): List<Book> {
         val bookIds = bookTags.map { it.bookId }
         return bookFacade.findBookById(bookIds)
     }

@@ -56,7 +56,7 @@ fun Application.configureTag() {
                     val tagId = call.parameters.getOrFail<Int>("id").toInt()
                     val bookTagList: List<BookTag> = bookTagFacade.findAllBookTagsByTagId(tagId)
                     if (bookTagList.isNotEmpty()) {
-                        val bookList = bookFacade.getBookLIstFromBookTags(bookTagList)
+                        val bookList = bookFacade.getBookListFromBookTags(bookTagList)
                         call.respond(bookList)
                     } else {
                         call.respond("No Books for Tag $tagId found.")
