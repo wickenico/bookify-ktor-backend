@@ -39,11 +39,23 @@ fun Application.configureFavorites() {
                     call.respond(favoriteList)
                 }
 
+                get("{userId}/{bookId}") {
+                    val userId = call.parameters.getOrFail<Int>("userId").toInt()
+                    val bookId = call.parameters.getOrFail<Int>("bookId").toInt()
+                    val isFavorite = favoriteFacade.isBookMarkedAsFavorite(userId, bookId)
+                    call.respond(isFavorite)
+                }
+
                 post {
                     val favorite = call.receive<Favorite>()
-                    val newFavorite: Favorite? = favoriteFacade.addNewFavorite(favorite)
-                    if (newFavorite != null) {
-                        call.respond(HttpStatusCode.Created, newFavorite)
+                    val isFavorite = favoriteFacade.isBookMarkedAsFavorite(favorite.userId, favorite.bookId)
+                    if (isFavorite) {
+                        call.respond(HttpStatusCode.Conflict, "Book already marked as favorite.")
+                    } else {
+                        val newFavorite: Favorite? = favoriteFacade.addNewFavorite(favorite)
+                        if (newFavorite != null) {
+                            call.respond(HttpStatusCode.Created, newFavorite)
+                        }
                     }
                 }
 

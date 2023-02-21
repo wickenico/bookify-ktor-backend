@@ -18,9 +18,11 @@ import io.ktor.server.response.respondText
 import io.ktor.server.routing.delete
 import io.ktor.server.routing.get
 import io.ktor.server.routing.post
+import io.ktor.server.routing.put
 import io.ktor.server.routing.route
 import io.ktor.server.routing.routing
 import io.ktor.server.util.getOrFail
+import java.time.OffsetDateTime
 
 fun Application.configureRouting() {
     routing {
@@ -69,6 +71,23 @@ fun Application.configureRouting() {
                     )
                     if (newBook != null) {
                         call.respond(HttpStatusCode.Created, newBook)
+                    }
+                }
+
+                put("/edit/{id}") {
+                    val id = call.parameters["id"]?.toInt() ?: return@put call.respond(HttpStatusCode.BadRequest)
+                    val book = call.receive<Book>()
+
+                    val edited = bookFacade.editBook(
+                        id, book.isbn10, book.isbn13, book.title, book.subtitle, book.author, book.publisher, book.pages, book.imageUrl, book.selfLink,
+                        book.publishedDate, book.description, book.printType, book.category, book.maturityRating, book.language, book.infoLink, book.rating,
+                        book.comment, book.readStatus, book.addedOnDate
+                    )
+                    if (edited) {
+                        val updatedBook = bookFacade.book(id)
+                        call.respond(HttpStatusCode.OK, updatedBook!!)
+                    } else {
+                        call.respond(HttpStatusCode.NotFound)
                     }
                 }
 

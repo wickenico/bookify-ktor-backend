@@ -6,6 +6,7 @@ import kotlinx.coroutines.runBlocking
 import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.and
+import org.jetbrains.exposed.sql.andWhere
 import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.select
@@ -51,11 +52,14 @@ class FavoriteRepository : FavoriteFacade {
             .map(::resultRowToFavorite)
     }
 
-    override suspend fun isBookMarkedAsFavorite(userId: Int, bookId: Int): Boolean = DatabaseFactory.dbQuery {
-        Favorites.select {
-            (Favorites.userId eq userId) and (Favorites.bookId eq bookId)
-        }.map(::resultRowToFavorite)
-            .singleOrNull() != null
+    override suspend fun isBookMarkedAsFavorite(userId: Int, bookId: Int): Boolean {
+        return DatabaseFactory.dbQuery {
+            val count = Favorites.select { Favorites.userId eq userId }
+                .andWhere { Favorites.bookId eq bookId }
+                .count()
+
+            count > 0
+        }
     }
 }
 

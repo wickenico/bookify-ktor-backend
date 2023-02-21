@@ -12,6 +12,8 @@ import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 
+data class TagCount(val tagName: String, val count: Int)
+
 class TagRepository : TagFacade {
 
     private fun resultRowToTag(row: ResultRow) = Tag(
@@ -20,7 +22,9 @@ class TagRepository : TagFacade {
     )
 
     override suspend fun allTags(): List<Tag> = DatabaseFactory.dbQuery {
-        Tags.selectAll().map(::resultRowToTag)
+        Tags.selectAll()
+            .orderBy(Tags.name)
+            .map(::resultRowToTag)
     }
 
     override suspend fun tag(id: Int): Tag? = DatabaseFactory.dbQuery {
