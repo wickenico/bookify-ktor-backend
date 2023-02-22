@@ -6,6 +6,7 @@ import com.auth0.jwt.algorithms.Algorithm
 import io.ktor.server.auth.Principal
 import io.ktor.server.auth.jwt.JWTAuthenticationProvider
 
+@Deprecated("we now use Basic Auth")
 class JwtConfig(jwtSecret: String) {
 
     companion object Constants {

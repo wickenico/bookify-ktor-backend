@@ -1,11 +1,9 @@
 package com.nw.persistence
 
-import com.nw.jwtConfig
 import com.nw.models.Book
 import com.nw.models.User
 import com.nw.models.UserBook
 import com.nw.models.Users
-import com.nw.security.JwtConfig
 import com.nw.security.hash
 import kotlinx.coroutines.runBlocking
 import org.jetbrains.exposed.sql.ResultRow
@@ -26,8 +24,7 @@ class UserRepository : UserFacade {
             fullName = row[Users.fullName],
             email = row[Users.email],
             username = row[Users.username],
-            password = row[Users.password],
-            authToken = row[Users.authToken]
+            password = row[Users.password]
         )
 
     override suspend fun allUsers(): List<User> = DatabaseFactory.dbQuery {
@@ -63,8 +60,6 @@ class UserRepository : UserFacade {
                 it[email] = user.email
                 it[username] = user.username
                 it[password] = hash(password = user.password)
-                val token = jwtConfig.generateToken(JwtConfig.JwtUser(userId = user.id, userName = user.username, email = user.email))
-                it[authToken] = token
             }.let {
                 user.copy(id = it[Users.id])
             }
@@ -78,7 +73,6 @@ class UserRepository : UserFacade {
                 it[email] = user.email
                 it[username] = user.username
                 it[password] = user.password
-                it[authToken] = user.authToken
             }.let { it > 0 }
         }
     }

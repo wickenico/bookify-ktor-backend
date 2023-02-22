@@ -1,9 +1,7 @@
 package com.nw.plugins
 
-import com.nw.auth.UserSession
 import com.nw.models.User
 import com.nw.persistence.userFacade
-import com.nw.security.JwtConfig
 import com.nw.security.LoginBody
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.Application
@@ -17,7 +15,6 @@ import io.ktor.server.routing.get
 import io.ktor.server.routing.post
 import io.ktor.server.routing.route
 import io.ktor.server.routing.routing
-import io.ktor.server.sessions.sessions
 import io.ktor.server.sessions.set
 
 fun Application.authRoutes() {
@@ -39,15 +36,17 @@ fun Application.authRoutes() {
                 if (user == null) {
                     call.respond(HttpStatusCode.Unauthorized, "Invalid Credentials")
                 } else {
-                    call.sessions.set(UserSession(id = user.id.toString(), count = 5))
+                    // call.sessions.set(UserSession(id = user.id.toString(), count = 5))
                     call.respond(user)
                 }
             }
 
             authenticate {
                 get("/me") {
-                    val user = call.principal<Principal>() as JwtConfig.JwtUser
-                    call.respond(user)
+                    val user = call.principal<Principal>()
+                    if (user != null) {
+                        call.respond(user)
+                    }
                 }
             }
         }

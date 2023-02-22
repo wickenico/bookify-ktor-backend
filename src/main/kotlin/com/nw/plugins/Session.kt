@@ -13,7 +13,7 @@ import io.ktor.server.sessions.get
 import io.ktor.server.sessions.sessions
 import io.ktor.server.sessions.set
 
-fun Application.configureSecurity() {
+fun Application.configureSession() {
     install(Sessions) {
         cookie<UserSession>("user_session") {
             cookie.path = "/"

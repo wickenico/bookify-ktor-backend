@@ -9,8 +9,7 @@ data class User(
     val fullName: String,
     val email: String,
     val username: String,
-    val password: String,
-    var authToken: String?
+    val password: String
 )
 
 object Users : Table() {
@@ -20,7 +19,6 @@ object Users : Table() {
     val createdAt = offsetDateTime("created_at").clientDefault { OffsetDateTime.now() }
     val username = varchar("username", length = 50)
     val password = varchar("password", length = 100)
-    val authToken = varchar("auth_token", length = 2064).nullable()
 
     override val primaryKey = PrimaryKey(id)
 }
