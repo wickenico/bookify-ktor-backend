@@ -34,6 +34,13 @@ fun Application.configureUser() {
                         call.respond(user)
                     }
                 }
+                get("details") {
+                    val username = call.request.queryParameters.getOrFail("username")
+                    val user: User? = userFacade.findUserByUsername(username)
+                    if (user != null) {
+                        call.respond(user)
+                    }
+                }
                 delete("{id}") {
                     val id = call.parameters["id"]?.toInt() ?: return@delete call.respond(HttpStatusCode.BadRequest)
                     if (userFacade.user(id) != null) {
