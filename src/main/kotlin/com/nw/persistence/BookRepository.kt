@@ -9,6 +9,7 @@ import com.nw.models.Books
 import kotlinx.coroutines.runBlocking
 import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import org.jetbrains.exposed.sql.andWhere
 import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.orWhere
@@ -40,11 +41,17 @@ class BookRepository : BookFacade {
         rating = row[Books.rating],
         comment = row[Books.comment],
         readStatus = row[Books.readStatus],
-        addedOnDate = row[Books.addedOnDate]
+        addedOnDate = row[Books.addedOnDate],
+        userId = row[Books.userId]
     )
 
-    override suspend fun allBooks(): List<Book> = DatabaseFactory.dbQuery {
-        Books.selectAll().map(::resultRowToBook)
+    suspend fun allBooksForFacade(): List<Book> = DatabaseFactory.dbQuery {
+        Books.selectAll().map { resultRowToBook(it) }
+    }
+
+    override suspend fun allBooks(userId: Int): List<Book> = DatabaseFactory.dbQuery {
+        Books.select { Books.userId eq userId }
+            .map(::resultRowToBook)
     }
 
     override suspend fun book(id: Int): Book? = DatabaseFactory.dbQuery {
@@ -57,6 +64,14 @@ class BookRepository : BookFacade {
     override suspend fun findBookByIsbn10orIsbn13(isbn10: String, isbn13: String): Book? = DatabaseFactory.dbQuery {
         Books.select { Books.isbn10 eq isbn10 }
             .orWhere { Books.isbn13 eq isbn13 }
+            .map(::resultRowToBook)
+            .singleOrNull()
+    }
+
+    override suspend fun findBookByIsbn10orIsbn13AndUserId(isbn10: String, isbn13: String, userId: Int): Book? = DatabaseFactory.dbQuery {
+        Books.select { Books.isbn10 eq isbn10 }
+            .orWhere { Books.isbn13 eq isbn13 }
+            .andWhere { Books.userId eq userId }
             .map(::resultRowToBook)
             .singleOrNull()
     }
@@ -81,7 +96,8 @@ class BookRepository : BookFacade {
         rating: RatingEnum,
         comment: String,
         readStatus: ReadStatusEnum,
-        addedOnDate: OffsetDateTime
+        addedOnDate: OffsetDateTime,
+        userId: Int
     ): Book? = DatabaseFactory.dbQuery {
         val insertStatement = Books.insert {
             it[Books.isbn10] = isbn10
@@ -104,6 +120,7 @@ class BookRepository : BookFacade {
             it[Books.comment] = comment
             it[Books.readStatus] = ReadStatusEnum.getByValue(readStatus.status)
             it[Books.addedOnDate] = addedOnDate
+            it[Books.userId] = userId
         }
         insertStatement.resultedValues?.singleOrNull()?.let(::resultRowToBook)
     }
@@ -129,7 +146,8 @@ class BookRepository : BookFacade {
         rating: RatingEnum,
         comment: String,
         readStatus: ReadStatusEnum,
-        addedOnDate: OffsetDateTime
+        addedOnDate: OffsetDateTime,
+        userId: Int
     ): Boolean = DatabaseFactory.dbQuery {
         Books.update({ Books.id eq id }) {
             it[Books.isbn10] = isbn10
@@ -152,6 +170,7 @@ class BookRepository : BookFacade {
             it[Books.comment] = comment
             it[Books.readStatus] = ReadStatusEnum.getByValue(readStatus.status)
             it[Books.addedOnDate] = addedOnDate
+            it[Books.userId] = userId
         } > 0
     }
 
@@ -172,7 +191,7 @@ class BookRepository : BookFacade {
 
 val bookFacade: BookFacade = BookRepository().apply {
     runBlocking {
-        if (allBooks().isEmpty()) {
+        if (allBooksForFacade().isEmpty()) {
         }
     }
 }

@@ -5,10 +5,13 @@ import com.nw.models.Tag
 import com.nw.persistence.bookFacade
 import com.nw.persistence.bookTagFacade
 import com.nw.persistence.tagFacade
+import com.nw.persistence.userFacade
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.Application
 import io.ktor.server.application.call
+import io.ktor.server.auth.UserIdPrincipal
 import io.ktor.server.auth.authenticate
+import io.ktor.server.auth.principal
 import io.ktor.server.request.receive
 import io.ktor.server.response.respond
 import io.ktor.server.response.respondText
@@ -24,7 +27,9 @@ fun Application.configureTag() {
         authenticate {
             route("api/v1/tags") {
                 get {
-                    val tags = tagFacade.allTags()
+                    val userName = call.principal<UserIdPrincipal>()?.name
+                    val user = userName?.let { it1 -> userFacade.findUserByUsername(it1) }
+                    val tags = tagFacade.allTags(user!!.id)
                     call.respond(tags)
                 }
                 get("{id}") {
@@ -35,8 +40,10 @@ fun Application.configureTag() {
                     }
                 }
                 post {
+                    val userName = call.principal<UserIdPrincipal>()?.name
+                    val user = userName?.let { it1 -> userFacade.findUserByUsername(it1) }
                     val tagName = call.receive<String>()
-                    val tag: Tag? = tagFacade.addNewTag(tagName)
+                    val tag: Tag? = tagFacade.addNewTag(tagName, user!!.id)
                     if (tag != null) {
                         call.respond(HttpStatusCode.Created, tag)
                     }

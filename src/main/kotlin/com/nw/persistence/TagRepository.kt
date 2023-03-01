@@ -6,23 +6,29 @@ import com.nw.models.Tags
 import kotlinx.coroutines.runBlocking
 import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import org.jetbrains.exposed.sql.andWhere
 import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 
-data class TagCount(val tagName: String, val count: Int)
-
 class TagRepository : TagFacade {
 
     private fun resultRowToTag(row: ResultRow) = Tag(
         id = row[Tags.id],
-        name = row[Tags.name]
+        name = row[Tags.name],
+        userId = row[Tags.userId]
     )
 
-    override suspend fun allTags(): List<Tag> = DatabaseFactory.dbQuery {
+    suspend fun allTagsForFacade(): List<Tag> = DatabaseFactory.dbQuery {
         Tags.selectAll()
+            .orderBy(Tags.name)
+            .map(::resultRowToTag)
+    }
+
+    override suspend fun allTags(userId: Int): List<Tag> = DatabaseFactory.dbQuery {
+        Tags.select { Tags.userId eq userId }
             .orderBy(Tags.name)
             .map(::resultRowToTag)
     }
@@ -38,15 +44,17 @@ class TagRepository : TagFacade {
             .map(::resultRowToTag)
     }
 
-    override suspend fun findTagByName(name: String): Tag? = DatabaseFactory.dbQuery {
+    override suspend fun findTagByName(name: String, userId: Int): Tag? = DatabaseFactory.dbQuery {
         Tags.select { Tags.name eq name }
+            .andWhere { Tags.userId eq userId }
             .map(::resultRowToTag)
             .singleOrNull()
     }
 
-    override suspend fun addNewTag(name: String): Tag? = DatabaseFactory.dbQuery {
+    override suspend fun addNewTag(name: String, userId: Int): Tag? = DatabaseFactory.dbQuery {
         val insertStatement = Tags.insert {
             it[Tags.name] = name
+            it[Tags.userId] = userId
         }
         insertStatement.resultedValues?.singleOrNull()?.let(::resultRowToTag)
     }
@@ -65,7 +73,7 @@ class TagRepository : TagFacade {
 
 val tagFacade: TagFacade = TagRepository().apply {
     runBlocking {
-        if (allTags().isEmpty()) {
+        if (allTagsForFacade().isEmpty()) {
         }
     }
 }

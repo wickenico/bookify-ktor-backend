@@ -5,6 +5,7 @@ import com.nw.enums.RatingEnum
 import com.nw.enums.ReadStatusEnum
 import com.nw.models.Book
 import com.nw.persistence.bookFacade
+import com.nw.persistence.userFacade
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.engine.cio.CIO
@@ -15,7 +16,9 @@ import io.ktor.http.HttpStatusCode
 import io.ktor.serialization.kotlinx.json.json
 import io.ktor.server.application.Application
 import io.ktor.server.application.call
+import io.ktor.server.auth.UserIdPrincipal
 import io.ktor.server.auth.authenticate
+import io.ktor.server.auth.principal
 import io.ktor.server.response.respond
 import io.ktor.server.response.respondRedirect
 import io.ktor.server.response.respondText
@@ -83,7 +86,12 @@ fun Application.configureGoogleBooksApiSearch() {
                     isbn13 = isbn10
                 }
 
-                if (bookFacade.findBookByIsbn10orIsbn13(isbn10, isbn13) != null) {
+                // Get userId
+                val userName = call.principal<UserIdPrincipal>()?.name
+                val user = userName?.let { it1 -> userFacade.findUserByUsername(it1) }
+                val userId = user!!.id
+
+                if (bookFacade.findBookByIsbn10orIsbn13AndUserId(isbn10, isbn13, userId) != null) {
                     val status = HttpStatusCode.Conflict
                     val message = "The book $isbn10 / $isbn13 already exists."
                     call.respondText(message, status = status)
@@ -160,6 +168,7 @@ fun Application.configureGoogleBooksApiSearch() {
                     var addedOnDate = OffsetDateTime.now()
 
                     client.close()
+
                     val book = Book.newBook(
                         isbn10,
                         isbn13,
@@ -180,7 +189,8 @@ fun Application.configureGoogleBooksApiSearch() {
                         RatingEnum.getByValue(rating),
                         comment,
                         ReadStatusEnum.getByValue(readStatus),
-                        addedOnDate
+                        addedOnDate,
+                        userId
                     )
 
                     call.respond(book)

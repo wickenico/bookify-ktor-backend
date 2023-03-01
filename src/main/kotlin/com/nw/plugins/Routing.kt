@@ -8,10 +8,13 @@ import com.nw.models.BookTag
 import com.nw.persistence.bookFacade
 import com.nw.persistence.bookTagFacade
 import com.nw.persistence.tagFacade
+import com.nw.persistence.userFacade
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.Application
 import io.ktor.server.application.call
+import io.ktor.server.auth.UserIdPrincipal
 import io.ktor.server.auth.authenticate
+import io.ktor.server.auth.principal
 import io.ktor.server.request.receive
 import io.ktor.server.response.respond
 import io.ktor.server.response.respondText
@@ -32,7 +35,10 @@ fun Application.configureRouting() {
 
             route("/api/v1/books") {
                 get {
-                    val books = bookFacade.allBooks()
+                    val userName = call.principal<UserIdPrincipal>()?.name
+                    println("username: $userName")
+                    val user = userName?.let { it1 -> userFacade.findUserByUsername(it1) }
+                    val books = bookFacade.allBooks(user!!.id)
                     call.respond(books)
                 }
 
@@ -66,7 +72,8 @@ fun Application.configureRouting() {
                         rating = RatingEnum.getByString(book.rating.toString()),
                         comment = book.comment,
                         readStatus = ReadStatusEnum.getByValue(book.readStatus.toString()),
-                        addedOnDate = book.addedOnDate
+                        addedOnDate = book.addedOnDate,
+                        userId = book.userId
                     )
                     if (newBook != null) {
                         call.respond(HttpStatusCode.Created, newBook)
@@ -80,7 +87,7 @@ fun Application.configureRouting() {
                     val edited = bookFacade.editBook(
                         id, book.isbn10, book.isbn13, book.title, book.subtitle, book.author, book.publisher, book.pages, book.imageUrl, book.selfLink,
                         book.publishedDate, book.description, book.printType, book.category, book.maturityRating, book.language, book.infoLink, book.rating,
-                        book.comment, book.readStatus, book.addedOnDate
+                        book.comment, book.readStatus, book.addedOnDate, book.userId
                     )
                     if (edited) {
                         val updatedBook = bookFacade.book(id)
@@ -112,9 +119,11 @@ fun Application.configureRouting() {
                 }
 
                 post("{id}/tags/add") {
+                    val userName = call.principal<UserIdPrincipal>()?.name
+                    val user = userName?.let { it1 -> userFacade.findUserByUsername(it1) }
                     val bookId = call.parameters.getOrFail<Int>("id").toInt()
                     val tagName = call.receive<String>()
-                    val bookTag = bookTagFacade.addTagToBook(bookId, tagName)
+                    val bookTag = bookTagFacade.addTagToBook(bookId, tagName, user!!.id)
                     if (bookTag != null) {
                         call.respond(HttpStatusCode.Created, "Tag $tagName added to book.")
                     } else {

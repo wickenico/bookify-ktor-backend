@@ -8,7 +8,7 @@ import com.nw.models.BookTag
 import java.time.OffsetDateTime
 
 interface BookFacade {
-    suspend fun allBooks(): List<Book>
+    suspend fun allBooks(userId: Int): List<Book>
     suspend fun book(id: Int): Book?
     suspend fun addNewBook(
         isbn10: String,
@@ -30,7 +30,8 @@ interface BookFacade {
         rating: RatingEnum,
         comment: String,
         readStatus: ReadStatusEnum,
-        addedOnDate: OffsetDateTime
+        addedOnDate: OffsetDateTime,
+        userId: Int
     ): Book?
     suspend fun editBook(
         id: Int,
@@ -53,11 +54,14 @@ interface BookFacade {
         rating: RatingEnum,
         comment: String,
         readStatus: ReadStatusEnum,
-        addedOnDate: OffsetDateTime
+        addedOnDate: OffsetDateTime,
+        userId: Int
     ): Boolean
     suspend fun deleteBook(id: Int): Boolean
     suspend fun findBookById(id: List<Int>): List<Book>
     suspend fun getBookListFromBookTags(bookTags: List<BookTag>): List<Book>
 
     suspend fun findBookByIsbn10orIsbn13(isbn10: String, isbn13: String): Book?
+
+    suspend fun findBookByIsbn10orIsbn13AndUserId(isbn10: String, isbn13: String, userId: Int): Book?
 }
