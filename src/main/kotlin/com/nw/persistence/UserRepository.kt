@@ -66,15 +66,11 @@ class UserRepository : UserFacade {
         }
     }
 
-    override suspend fun editUser(user: User): Boolean {
-        return transaction {
-            Users.update({ Users.id eq user.id }) {
-                it[fullName] = user.fullName
-                it[email] = user.email
-                it[username] = user.username
-                it[password] = user.password
-            }.let { it > 0 }
-        }
+    override suspend fun editUser(userId: Int, fullName: String, email: String): Boolean = DatabaseFactory.dbQuery {
+        Users.update({ Users.id eq userId }) {
+            it[Users.fullName] = fullName
+            it[Users.email] = email
+        } > 0
     }
 
     override suspend fun deleteUser(id: Int): Boolean {

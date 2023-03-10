@@ -10,7 +10,7 @@ interface UserFacade {
     suspend fun findUserByUsername(username: String): User?
     suspend fun findUserByUsernameAndPassword(user: String, password: String): User?
     suspend fun addNewUser(user: User): User?
-    suspend fun editUser(user: User): Boolean
+    suspend fun editUser(userId: Int, fullName: String, email: String): Boolean
     suspend fun deleteUser(id: Int): Boolean
     suspend fun getUser(username: String, password: String): User?
     suspend fun checkIfUsernameExists(username: String): Boolean

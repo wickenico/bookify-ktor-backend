@@ -2,6 +2,7 @@ package com.nw.plugins
 
 import com.nw.models.User
 import com.nw.models.UserBook
+import com.nw.models.UserEdit
 import com.nw.persistence.bookFacade
 import com.nw.persistence.userBookFacade
 import com.nw.persistence.userFacade
@@ -15,6 +16,7 @@ import io.ktor.server.response.respondText
 import io.ktor.server.routing.delete
 import io.ktor.server.routing.get
 import io.ktor.server.routing.post
+import io.ktor.server.routing.put
 import io.ktor.server.routing.route
 import io.ktor.server.routing.routing
 import io.ktor.server.util.getOrFail
@@ -78,6 +80,24 @@ fun Application.configureUser() {
                         call.respond(HttpStatusCode.Created, "Book $bookId added to user.")
                     } else {
                         call.respond(HttpStatusCode.Conflict, "Book $bookId already assigned to user.")
+                    }
+                }
+
+                put("/edit/{id}") {
+                    val id = call.parameters["id"]?.toInt() ?: return@put call.respond(HttpStatusCode.BadRequest)
+                    val editUser = call.receive<UserEdit>()
+
+                    val edited = userFacade.editUser(
+                        id,
+                        editUser.fullName,
+                        editUser.email
+                    )
+
+                    if (edited) {
+                        val updatedUser = userFacade.user(id)
+                        call.respond(HttpStatusCode.OK, updatedUser!!)
+                    } else {
+                        call.respond(HttpStatusCode.NotFound)
                     }
                 }
             }
