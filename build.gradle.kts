@@ -2,15 +2,14 @@ val ktor_version: String by project
 val kotlin_version: String by project
 val logback_version: String by project
 val exposed_version: String by project
-val h2_version: String by project
 val swagger_codegen_version: String by project
 
 plugins {
     application
     kotlin("jvm") version "1.8.10"
-    id("io.ktor.plugin") version "2.2.3"
+    id("io.ktor.plugin") version "2.2.4"
     id("org.jetbrains.kotlin.plugin.serialization") version "1.8.10"
-    id("org.jlleitschuh.gradle.ktlint") version "11.2.0"
+    id("org.jlleitschuh.gradle.ktlint") version "11.3.1"
 }
 
 group = "com.nw"
@@ -76,4 +75,19 @@ dependencies {
 
     testImplementation("io.ktor:ktor-server-tests-jvm:$ktor_version")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")
+}
+
+ktor {
+    docker {
+        jreVersion.set(io.ktor.plugin.features.JreVersion.JRE_17)
+        portMappings.set(
+            listOf(
+                io.ktor.plugin.features.DockerPortMapping(
+                    8090,
+                    8090,
+                    io.ktor.plugin.features.DockerPortMappingProtocol.TCP
+                )
+            )
+        )
+    }
 }
