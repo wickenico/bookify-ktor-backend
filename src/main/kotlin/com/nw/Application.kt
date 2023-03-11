@@ -14,6 +14,7 @@ import com.nw.plugins.configureSession
 import com.nw.plugins.configureStatusPages
 import com.nw.plugins.configureTag
 import com.nw.plugins.configureUser
+import com.nw.plugins.versioning
 import io.ktor.server.application.Application
 
 fun main(args: Array<String>): Unit =
@@ -35,4 +36,5 @@ fun Application.module() {
     configureTag()
     configureGoogleBooksApiSearch()
     configureFavorites()
+    versioning()
 }

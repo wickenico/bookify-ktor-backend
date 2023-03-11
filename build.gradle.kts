@@ -3,6 +3,7 @@ val kotlin_version: String by project
 val logback_version: String by project
 val exposed_version: String by project
 val swagger_codegen_version: String by project
+val appVersion: String by project
 
 plugins {
     application
@@ -13,7 +14,7 @@ plugins {
 }
 
 group = "com.nw"
-version = "0.0.1"
+version = "$appVersion"
 application {
     mainClass.set("io.ktor.server.cio.EngineMain")
 
