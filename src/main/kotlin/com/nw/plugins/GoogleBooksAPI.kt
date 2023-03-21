@@ -29,7 +29,13 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.jsonPrimitive
+import java.time.LocalDate
 import java.time.OffsetDateTime
+import java.time.OffsetTime
+import java.time.Year
+import java.time.ZoneOffset
+import java.time.format.DateTimeFormatter
 
 fun Application.configureGoogleBooksApiSearch() {
     routing {
@@ -129,8 +135,20 @@ fun Application.configureGoogleBooksApiSearch() {
                     selfLink = selfLink.replace("\"", "").trim()
 
                     // Published Date
-                    // var publishedDate = volumeInfoObject?.get("publishedDate").toString()
-                    var pDate = OffsetDateTime.now()
+                    var publishedDate = volumeInfoObject?.get("publishedDate")?.jsonPrimitive?.content
+                    val formatterYear = DateTimeFormatter.ofPattern("yyyy")
+                    val formatterDate = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+                    val year = try {
+                        Year.parse(publishedDate, formatterYear)
+                    } catch (ex: Exception) {
+                        null
+                    }
+                    val localDate = year?.atDay(1) ?: LocalDate.parse(publishedDate, formatterDate)
+                    val localDateTime = localDate.atStartOfDay()
+                    val offset = OffsetTime.of(0, 0, 0, 0, ZoneOffset.UTC).offset
+                    val publishedDateOffsetDateTime = OffsetDateTime.of(localDateTime, offset)
+
+                    // var pDate = OffsetDateTime.now()
 
                     // Description
                     var description = volumeInfoObject?.get("description").toString()
@@ -179,7 +197,7 @@ fun Application.configureGoogleBooksApiSearch() {
                         pages,
                         imageUrl,
                         selfLink,
-                        pDate,
+                        publishedDateOffsetDateTime,
                         description,
                         PrintTypeEnum.getByValue(printType),
                         category,
