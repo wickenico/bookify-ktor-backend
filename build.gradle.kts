@@ -7,9 +7,9 @@ val appVersion: String by project
 
 plugins {
     application
-    kotlin("jvm") version "1.8.10"
+    kotlin("jvm") version "1.8.20"
     id("io.ktor.plugin") version "2.2.4"
-    id("org.jetbrains.kotlin.plugin.serialization") version "1.8.10"
+    id("org.jetbrains.kotlin.plugin.serialization") version "1.8.20"
     id("org.jlleitschuh.gradle.ktlint") version "11.3.1"
 }
 
