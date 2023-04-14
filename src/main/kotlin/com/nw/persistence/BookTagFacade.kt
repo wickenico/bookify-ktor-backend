@@ -7,4 +7,5 @@ interface BookTagFacade {
     suspend fun findAllBookTagsByBookId(bookId: Int): List<BookTag>
     suspend fun findAllBookTagsByTagId(tagId: Int): List<BookTag>
     suspend fun addTagToBook(bookId: Int, tagName: String, userId: Int): BookTag?
+    suspend fun deleteAllBookTagsByBookIdAndUserId(bookId: Int, userId: Int): Boolean
 }

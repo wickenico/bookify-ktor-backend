@@ -98,12 +98,19 @@ fun Application.configureRouting() {
                 }
 
                 delete("{id}") {
-                    val id = call.parameters["id"]?.toInt() ?: return@delete call.respond(HttpStatusCode.BadRequest)
-                    if (bookFacade.book(id) != null) {
-                        bookFacade.deleteBook(id)
-                        call.respondText("Book $id successfully removed.", status = HttpStatusCode.Accepted)
+                    val bookId = call.parameters["id"]?.toInt() ?: return@delete call.respond(HttpStatusCode.BadRequest)
+                    if (bookFacade.book(bookId) != null) {
+                        val bookDeleted = bookFacade.deleteBook(bookId)
+                        if (bookDeleted) {
+                            val userName = call.principal<UserIdPrincipal>()?.name
+                            val user = userName?.let { it1 -> userFacade.findUserByUsername(it1) }
+                            val bookTagsDeleted = bookTagFacade.deleteAllBookTagsByBookIdAndUserId(bookId, user!!.id)
+                            if (bookTagsDeleted) {
+                            }
+                        }
+                        call.respondText("Book $bookId successfully removed.", status = HttpStatusCode.Accepted)
                     } else {
-                        call.respondText("Book $id not found", status = HttpStatusCode.NotFound)
+                        call.respondText("Book $bookId not found", status = HttpStatusCode.NotFound)
                     }
                 }
 

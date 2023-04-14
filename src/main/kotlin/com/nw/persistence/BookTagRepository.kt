@@ -4,7 +4,10 @@ import com.nw.models.BookTag
 import com.nw.models.BookTags
 import kotlinx.coroutines.runBlocking
 import org.jetbrains.exposed.sql.ResultRow
+import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.andWhere
+import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.selectAll
@@ -60,6 +63,14 @@ class BookTagRepository : BookTagFacade {
                 .andWhere { BookTags.tagId eq tagId }
                 .andWhere { BookTags.userId eq userId }
                 .count() > 0
+        }
+    }
+
+    override suspend fun deleteAllBookTagsByBookIdAndUserId(bookId: Int, userId: Int): Boolean {
+        return DatabaseFactory.dbQuery {
+            BookTags.deleteWhere {
+                (BookTags.bookId eq bookId) and (BookTags.userId eq userId)
+            } > 0
         }
     }
 }
