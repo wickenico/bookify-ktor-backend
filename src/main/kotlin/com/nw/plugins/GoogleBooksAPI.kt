@@ -113,8 +113,15 @@ fun Application.configureGoogleBooksApiSearch() {
                     // Author
                     val authors = volumeInfoObject?.get("authors")?.jsonArray
 
-                    var author = authors?.get(0).toString()
-                    author = author.replace("\"", "")
+                    // var author = authors?.get(0).toString()
+                    // author = author.replace("\"", "")
+                    val authorsList = mutableListOf<String>()
+
+                    authors?.forEach {
+                        var author = it.toString()
+                        author = author.replace("\"", "")
+                        authorsList.add(author)
+                    }
 
                     // Publisher
                     var publisher = volumeInfoObject?.get("publisher").toString()
@@ -192,7 +199,7 @@ fun Application.configureGoogleBooksApiSearch() {
                         isbn13,
                         title,
                         subtitle,
-                        author,
+                        authorsList,
                         publisher,
                         pages,
                         imageUrl,
