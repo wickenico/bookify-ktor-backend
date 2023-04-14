@@ -69,6 +69,14 @@ fun Application.configureTag() {
                         call.respond("No Books for Tag $tagId found.")
                     }
                 }
+
+                get("{id}/count") {
+                    val tagId = call.parameters.getOrFail<Int>("id").toInt()
+                    val userName = call.principal<UserIdPrincipal>()?.name
+                    val user = userName?.let { it1 -> userFacade.findUserByUsername(it1) }
+                    val tagCount = bookTagFacade.countBookTagsByTagId(tagId, user!!.id)
+                    call.respond(tagCount)
+                }
             }
         }
     }

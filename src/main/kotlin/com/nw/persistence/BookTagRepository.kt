@@ -73,6 +73,13 @@ class BookTagRepository : BookTagFacade {
             } > 0
         }
     }
+
+    override suspend fun countBookTagsByTagId(tagId: Int, userId: Int): Long {
+        return DatabaseFactory.dbQuery {
+            BookTags.select { (BookTags.tagId eq tagId) and (BookTags.userId eq userId) }
+                .count()
+        }
+    }
 }
 
 val bookTagFacade: BookTagFacade = BookTagRepository().apply {
