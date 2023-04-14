@@ -136,6 +136,7 @@ fun Application.configureGoogleBooksApiSearch() {
 
                     var imageUrl = imageLinks?.get("thumbnail").toString()
                     imageUrl = imageUrl.replace("\"", "").trim()
+                    imageUrl = imageUrl.replace("http://", "https://")
 
                     // Self Link
                     var selfLink = itemInfo["selfLink"].toString()
