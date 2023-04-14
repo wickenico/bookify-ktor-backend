@@ -57,7 +57,7 @@ fun Application.configureRouting() {
                         isbn13 = book.isbn13,
                         title = book.title,
                         subtitle = book.subtitle,
-                        author = book.author,
+                        authors = book.authors,
                         publisher = book.publisher,
                         pages = book.pages,
                         imageUrl = book.imageUrl,
@@ -85,7 +85,7 @@ fun Application.configureRouting() {
                     val book = call.receive<Book>()
 
                     val edited = bookFacade.editBook(
-                        id, book.isbn10, book.isbn13, book.title, book.subtitle, book.author, book.publisher, book.pages, book.imageUrl, book.selfLink,
+                        id, book.isbn10, book.isbn13, book.title, book.subtitle, book.authors, book.publisher, book.pages, book.imageUrl, book.selfLink,
                         book.publishedDate, book.description, book.printType, book.category, book.maturityRating, book.language, book.infoLink, book.rating,
                         book.comment, book.readStatus, book.addedOnDate, book.userId
                     )

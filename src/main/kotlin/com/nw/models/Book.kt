@@ -14,7 +14,7 @@ data class Book(
     val isbn13: String,
     var title: String,
     var subtitle: String,
-    var author: String,
+    var authors: List<String>,
     var publisher: String,
     var pages: Int,
     var imageUrl: String,
@@ -39,7 +39,7 @@ data class Book(
             isbn13: String,
             title: String,
             subtitle: String,
-            author: String,
+            authors: List<String>,
             publisher: String,
             pages: Int,
             imageUrl: String,
@@ -62,7 +62,7 @@ data class Book(
             isbn13,
             title,
             subtitle,
-            author,
+            authors,
             publisher,
             pages,
             imageUrl,
@@ -89,7 +89,7 @@ object Books : Table() {
     val isbn13 = varchar("isbn13", 128)
     val title = varchar("title", 128)
     val subtitle = varchar("subtitle", 128)
-    val author = varchar("author", 128)
+    val authors = varchar("authors", 1028)
     val publisher = varchar("publisher", 128)
     val pages = integer("pages")
     val imageUrl = varchar("imageUrl", 128)

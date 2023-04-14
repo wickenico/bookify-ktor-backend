@@ -26,7 +26,7 @@ class BookRepository : BookFacade {
         isbn13 = row[Books.isbn13],
         title = row[Books.title],
         subtitle = row[Books.subtitle],
-        author = row[Books.author],
+        authors = row[Books.authors].split(","),
         publisher = row[Books.publisher],
         pages = row[Books.pages],
         imageUrl = row[Books.imageUrl],
@@ -81,7 +81,7 @@ class BookRepository : BookFacade {
         isbn13: String,
         title: String,
         subtitle: String,
-        author: String,
+        authors: List<String>,
         publisher: String,
         pages: Int,
         imageUrl: String,
@@ -104,7 +104,7 @@ class BookRepository : BookFacade {
             it[Books.isbn13] = isbn13
             it[Books.title] = title
             it[Books.subtitle] = subtitle
-            it[Books.author] = author
+            it[Books.authors] = authors.joinToString(",")
             it[Books.publisher] = publisher
             it[Books.pages] = pages
             it[Books.imageUrl] = imageUrl
@@ -131,7 +131,7 @@ class BookRepository : BookFacade {
         isbn13: String,
         title: String,
         subtitle: String,
-        author: String,
+        authors: List<String>,
         publisher: String,
         pages: Int,
         imageUrl: String,
@@ -154,7 +154,7 @@ class BookRepository : BookFacade {
             it[Books.isbn13] = isbn13
             it[Books.title] = title
             it[Books.subtitle] = subtitle
-            it[Books.author] = author
+            it[Books.authors] = authors.joinToString(",")
             it[Books.publisher] = publisher
             it[Books.pages] = pages
             it[Books.imageUrl] = imageUrl
