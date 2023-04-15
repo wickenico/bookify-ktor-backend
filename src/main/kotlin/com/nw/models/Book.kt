@@ -22,7 +22,7 @@ data class Book(
     var publishedDate: OffsetDateTime,
     var description: String,
     var printType: PrintTypeEnum,
-    var category: String,
+    var categories: List<String>,
     var maturityRating: String,
     var language: String, // Enum?
     var infoLink: String,
@@ -47,7 +47,7 @@ data class Book(
             publishedDate: OffsetDateTime,
             description: String,
             printType: PrintTypeEnum,
-            category: String,
+            categories: List<String>,
             maturityRating: String,
             language: String,
             infoLink: String,
@@ -70,7 +70,7 @@ data class Book(
             publishedDate,
             description,
             printType,
-            category,
+            categories,
             maturityRating,
             language,
             infoLink,
@@ -97,7 +97,7 @@ object Books : Table() {
     val publishedDate = offsetDateTime("publishedDate")
     val description = varchar("description", 5000)
     val printType = enumerationByName("printType", 128, PrintTypeEnum::class)
-    val category = varchar("category", 128)
+    val categories = varchar("categories", 1028)
     val maturityRating = varchar("maturityRating", 128)
     val language = varchar("language", 128)
     val infoLink = varchar("infoLink", 128)

@@ -34,7 +34,7 @@ class BookRepository : BookFacade {
         publishedDate = row[Books.publishedDate],
         description = row[Books.description],
         printType = row[Books.printType],
-        category = row[Books.category],
+        categories = row[Books.categories].split(","),
         maturityRating = row[Books.maturityRating],
         language = row[Books.language],
         infoLink = row[Books.infoLink],
@@ -89,7 +89,7 @@ class BookRepository : BookFacade {
         publishedDate: OffsetDateTime,
         description: String,
         printType: PrintTypeEnum,
-        category: String,
+        categories: List<String>,
         maturityRating: String,
         language: String,
         infoLink: String,
@@ -112,7 +112,7 @@ class BookRepository : BookFacade {
             it[Books.publishedDate] = publishedDate
             it[Books.description] = description
             it[Books.printType] = PrintTypeEnum.getByValue(printType.type)
-            it[Books.category] = category
+            it[Books.categories] = categories.joinToString(",")
             it[Books.maturityRating] = maturityRating
             it[Books.language] = language
             it[Books.infoLink] = infoLink
@@ -139,7 +139,7 @@ class BookRepository : BookFacade {
         publishedDate: OffsetDateTime,
         description: String,
         printType: PrintTypeEnum,
-        category: String,
+        categories: List<String>,
         maturityRating: String,
         language: String,
         infoLink: String,
@@ -162,7 +162,7 @@ class BookRepository : BookFacade {
             it[Books.publishedDate] = publishedDate
             it[Books.description] = description
             it[Books.printType] = PrintTypeEnum.getByValue(printType.type)
-            it[Books.category] = category
+            it[Books.categories] = categories.joinToString(",")
             it[Books.maturityRating] = maturityRating
             it[Books.language] = language
             it[Books.infoLink] = infoLink

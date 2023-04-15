@@ -167,7 +167,14 @@ fun Application.configureGoogleBooksApiSearch() {
                     printType = printType.replace("\"", "")
 
                     // Category
-                    var category = ""
+                    var categories = volumeInfoObject?.get("categories")?.jsonArray
+                    val categoriesList = mutableListOf<String>()
+
+                    categories?.forEach {
+                        var category = it.toString()
+                        category = category.replace("\"", "")
+                        categoriesList.add(category)
+                    }
 
                     // Maturity Rating
                     var maturityRating = volumeInfoObject?.get("maturityRating").toString()
@@ -208,7 +215,7 @@ fun Application.configureGoogleBooksApiSearch() {
                         publishedDateOffsetDateTime,
                         description,
                         PrintTypeEnum.getByValue(printType),
-                        category,
+                        categoriesList,
                         maturityRating,
                         language,
                         infoLink,

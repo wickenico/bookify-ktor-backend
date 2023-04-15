@@ -65,7 +65,7 @@ fun Application.configureRouting() {
                         publishedDate = book.publishedDate,
                         description = book.description,
                         printType = PrintTypeEnum.getByValue(book.printType.toString()),
-                        category = book.category,
+                        categories = book.categories,
                         maturityRating = book.maturityRating,
                         language = book.language,
                         infoLink = book.infoLink,
@@ -86,7 +86,7 @@ fun Application.configureRouting() {
 
                     val edited = bookFacade.editBook(
                         id, book.isbn10, book.isbn13, book.title, book.subtitle, book.authors, book.publisher, book.pages, book.imageUrl, book.selfLink,
-                        book.publishedDate, book.description, book.printType, book.category, book.maturityRating, book.language, book.infoLink, book.rating,
+                        book.publishedDate, book.description, book.printType, book.categories, book.maturityRating, book.language, book.infoLink, book.rating,
                         book.comment, book.readStatus, book.addedOnDate, book.userId
                     )
                     if (edited) {
