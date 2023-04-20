@@ -106,9 +106,9 @@ fun Application.configureRouting() {
                             val user = userName?.let { it1 -> userFacade.findUserByUsername(it1) }
                             val bookTagsDeleted = bookTagFacade.deleteAllBookTagsByBookIdAndUserId(bookId, user!!.id)
                             if (bookTagsDeleted) {
+                                call.respondText("Book $bookId successfully removed.", status = HttpStatusCode.Accepted)
                             }
                         }
-                        call.respondText("Book $bookId successfully removed.", status = HttpStatusCode.Accepted)
                     } else {
                         call.respondText("Book $bookId not found", status = HttpStatusCode.NotFound)
                     }
@@ -135,6 +135,29 @@ fun Application.configureRouting() {
                         call.respond(HttpStatusCode.Created, "Tag $tagName added to book.")
                     } else {
                         call.respond(HttpStatusCode.Conflict, "Tag $tagName already assigned to book.")
+                    }
+                }
+
+                delete("{id}/tags/{tagId}/delete") {
+                    val userName = call.principal<UserIdPrincipal>()?.name
+                    val user = userName?.let { it1 -> userFacade.findUserByUsername(it1) }
+                    val bookId = call.parameters.getOrFail<Int>("id").toInt()
+                    val tagId = call.parameters.getOrFail<Int>("tagId").toInt()
+                    val bookTagDeleted = bookTagFacade.deleteBookTagByBookIdAndTagIdAndUserId(bookId, tagId, user!!.id)
+                    if (bookTagDeleted) {
+                        call.respondText("Tag $tagId successfully removed.", status = HttpStatusCode.OK)
+                    } else {
+                        call.respondText("Tag $tagId for Book $bookId not found", status = HttpStatusCode.NotFound)
+                    }
+                }
+
+                delete("{id}/booktags/{bookTagId}/delete") {
+                    val bookTagId = call.parameters.getOrFail<Int>("bookTagId").toInt()
+                    val bookTagDeleted = bookTagFacade.deleteBookTagById(bookTagId)
+                    if (bookTagDeleted) {
+                        call.respondText("BookTag $bookTagId successfully removed.", status = HttpStatusCode.OK)
+                    } else {
+                        call.respondText("BookTag $bookTagId not found", status = HttpStatusCode.NotFound)
                     }
                 }
             }

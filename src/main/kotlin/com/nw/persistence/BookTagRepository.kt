@@ -66,11 +66,25 @@ class BookTagRepository : BookTagFacade {
         }
     }
 
+    override suspend fun deleteBookTagByBookIdAndTagIdAndUserId(bookId: Int, tagId: Int, userId: Int): Boolean {
+        return DatabaseFactory.dbQuery {
+            BookTags.deleteWhere {
+                (BookTags.bookId eq bookId) and (BookTags.tagId eq tagId) and (BookTags.userId eq userId)
+            } > 0
+        }
+    }
+
     override suspend fun deleteAllBookTagsByBookIdAndUserId(bookId: Int, userId: Int): Boolean {
         return DatabaseFactory.dbQuery {
             BookTags.deleteWhere {
                 (BookTags.bookId eq bookId) and (BookTags.userId eq userId)
             } > 0
+        }
+    }
+
+    override suspend fun deleteBookTagById(id: Int): Boolean {
+        return DatabaseFactory.dbQuery {
+            BookTags.deleteWhere { (BookTags.id eq id) } > 0
         }
     }
 
