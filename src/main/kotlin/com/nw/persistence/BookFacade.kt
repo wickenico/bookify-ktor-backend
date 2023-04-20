@@ -54,8 +54,7 @@ interface BookFacade {
         rating: RatingEnum,
         comment: String,
         readStatus: ReadStatusEnum,
-        addedOnDate: OffsetDateTime,
-        userId: Int
+        addedOnDate: OffsetDateTime
     ): Boolean
     suspend fun deleteBook(id: Int): Boolean
     suspend fun findBookById(id: List<Int>): List<Book>

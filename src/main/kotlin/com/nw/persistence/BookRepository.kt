@@ -146,8 +146,7 @@ class BookRepository : BookFacade {
         rating: RatingEnum,
         comment: String,
         readStatus: ReadStatusEnum,
-        addedOnDate: OffsetDateTime,
-        userId: Int
+        addedOnDate: OffsetDateTime
     ): Boolean = DatabaseFactory.dbQuery {
         Books.update({ Books.id eq id }) {
             it[Books.isbn10] = isbn10
@@ -170,7 +169,6 @@ class BookRepository : BookFacade {
             it[Books.comment] = comment
             it[Books.readStatus] = ReadStatusEnum.getByValue(readStatus.status)
             it[Books.addedOnDate] = addedOnDate
-            it[Books.userId] = userId
         } > 0
     }
 

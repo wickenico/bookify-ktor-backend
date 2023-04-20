@@ -87,7 +87,7 @@ fun Application.configureRouting() {
                     val edited = bookFacade.editBook(
                         id, book.isbn10, book.isbn13, book.title, book.subtitle, book.authors, book.publisher, book.pages, book.imageUrl, book.selfLink,
                         book.publishedDate, book.description, book.printType, book.categories, book.maturityRating, book.language, book.infoLink, book.rating,
-                        book.comment, book.readStatus, book.addedOnDate, book.userId
+                        book.comment, book.readStatus, book.addedOnDate
                     )
                     if (edited) {
                         val updatedBook = bookFacade.book(id)
