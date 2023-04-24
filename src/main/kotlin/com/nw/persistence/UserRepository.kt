@@ -99,6 +99,18 @@ class UserRepository : UserFacade {
         val bookIds = userBooks.map { it.bookId }
         return bookFacade.findBookById(bookIds)
     }
+
+    override suspend fun verifyUser(userId: Int, password: String): Boolean = DatabaseFactory.dbQuery {
+        Users.select { Users.id eq userId }
+            .andWhere { Users.password eq hash(password) }
+            .singleOrNull() != null
+    }
+
+    override suspend fun changePassword(userId: Int, newPassword: String): Boolean = DatabaseFactory.dbQuery {
+        Users.update({ Users.id eq userId }) {
+            it[Users.password] = hash(newPassword)
+        } > 0
+    }
 }
 
 val userFacade: UserFacade = UserRepository().apply {

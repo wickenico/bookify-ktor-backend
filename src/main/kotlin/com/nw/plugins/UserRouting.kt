@@ -1,5 +1,6 @@
 package com.nw.plugins
 
+import com.nw.models.PasswordChange
 import com.nw.models.User
 import com.nw.models.UserBook
 import com.nw.models.UserEdit
@@ -98,6 +99,18 @@ fun Application.configureUser() {
                         call.respond(HttpStatusCode.OK, updatedUser!!)
                     } else {
                         call.respond(HttpStatusCode.NotFound)
+                    }
+                }
+
+                put("/edit/{id}/password") {
+                    val id = call.parameters["id"]?.toInt() ?: return@put call.respond(HttpStatusCode.BadRequest)
+                    val passwordDto = call.receive<PasswordChange>()
+
+                    if (userFacade.verifyUser(id, passwordDto.oldPassword)) {
+                        userFacade.changePassword(id, passwordDto.newPassword)
+                        call.respond(HttpStatusCode.OK, "User $id updated.")
+                    } else {
+                        call.respond(HttpStatusCode.Conflict, "Password for user $id not correct.")
                     }
                 }
             }

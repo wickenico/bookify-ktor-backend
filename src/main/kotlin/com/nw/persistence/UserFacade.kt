@@ -14,5 +14,7 @@ interface UserFacade {
     suspend fun deleteUser(id: Int): Boolean
     suspend fun getUser(username: String, password: String): User?
     suspend fun checkIfUsernameExists(username: String): Boolean
+    suspend fun verifyUser(userId: Int, password: String): Boolean
+    suspend fun changePassword(userId: Int, newPassword: String): Boolean
     suspend fun getBookListFromUserBooks(userBooks: List<UserBook>): List<Book>
 }
