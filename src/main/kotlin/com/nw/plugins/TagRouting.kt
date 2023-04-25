@@ -2,10 +2,10 @@ package com.nw.plugins
 
 import com.nw.models.BookTag
 import com.nw.models.Tag
-import com.nw.persistence.bookFacade
-import com.nw.persistence.bookTagFacade
-import com.nw.persistence.tagFacade
-import com.nw.persistence.userFacade
+import com.nw.persistence.BookFacade
+import com.nw.persistence.BookTagFacade
+import com.nw.persistence.TagFacade
+import com.nw.persistence.UserFacade
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.Application
 import io.ktor.server.application.call
@@ -22,7 +22,7 @@ import io.ktor.server.routing.route
 import io.ktor.server.routing.routing
 import io.ktor.server.util.getOrFail
 
-fun Application.configureTag() {
+fun Application.configureTag(tagFacade: TagFacade, bookFacade: BookFacade, bookTagFacade: BookTagFacade, userFacade: UserFacade) {
     routing {
         authenticate {
             route("api/v1/tags") {

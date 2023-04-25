@@ -3,7 +3,7 @@ package com.nw.persistence
 import com.nw.models.BookTag
 import com.nw.models.Tag
 import com.nw.models.Tags
-import kotlinx.coroutines.runBlocking
+import com.nw.utils.tagFacade
 import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.andWhere
@@ -68,12 +68,5 @@ class TagRepository : TagFacade {
     override suspend fun getTagListFromBookTags(bookTags: List<BookTag>): List<Tag> {
         val tagIds = bookTags.map { it.tagId }
         return tagFacade.findTagById(tagIds)
-    }
-}
-
-val tagFacade: TagFacade = TagRepository().apply {
-    runBlocking {
-        if (allTagsForFacade().isEmpty()) {
-        }
     }
 }

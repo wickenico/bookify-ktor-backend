@@ -4,9 +4,9 @@ import com.nw.models.PasswordChange
 import com.nw.models.User
 import com.nw.models.UserBook
 import com.nw.models.UserEdit
-import com.nw.persistence.bookFacade
+import com.nw.persistence.BookFacade
+import com.nw.persistence.UserFacade
 import com.nw.persistence.userBookFacade
-import com.nw.persistence.userFacade
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.Application
 import io.ktor.server.application.call
@@ -22,7 +22,7 @@ import io.ktor.server.routing.route
 import io.ktor.server.routing.routing
 import io.ktor.server.util.getOrFail
 
-fun Application.configureUser() {
+fun Application.configureUser(bookFacade: BookFacade, userFacade: UserFacade) {
     routing {
         authenticate {
             route("/api/v1/users") {

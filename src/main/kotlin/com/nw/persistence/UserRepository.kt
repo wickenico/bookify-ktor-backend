@@ -5,7 +5,7 @@ import com.nw.models.User
 import com.nw.models.UserBook
 import com.nw.models.Users
 import com.nw.security.hash
-import kotlinx.coroutines.runBlocking
+import com.nw.utils.bookFacade
 import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.andWhere
@@ -110,12 +110,5 @@ class UserRepository : UserFacade {
         Users.update({ Users.id eq userId }) {
             it[Users.password] = hash(newPassword)
         } > 0
-    }
-}
-
-val userFacade: UserFacade = UserRepository().apply {
-    runBlocking {
-        if (allUsers().isEmpty()) {
-        }
     }
 }

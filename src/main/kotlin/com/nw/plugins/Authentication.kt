@@ -1,6 +1,6 @@
 package com.nw.plugins
 
-import com.nw.persistence.userFacade
+import com.nw.persistence.UserFacade
 import com.nw.security.hash
 import io.ktor.server.application.Application
 import io.ktor.server.application.install
@@ -8,7 +8,7 @@ import io.ktor.server.auth.Authentication
 import io.ktor.server.auth.UserIdPrincipal
 import io.ktor.server.auth.basic
 
-fun Application.configureAuth() {
+fun Application.configureAuth(userFacade: UserFacade) {
     install(Authentication) {
         basic {
             realm = "Bookify-ktor-backend"

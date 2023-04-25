@@ -2,7 +2,6 @@ package com.nw.persistence
 
 import com.nw.models.Favorite
 import com.nw.models.Favorites
-import kotlinx.coroutines.runBlocking
 import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.and
@@ -59,13 +58,6 @@ class FavoriteRepository : FavoriteFacade {
                 .count()
 
             count > 0
-        }
-    }
-}
-
-val favoriteFacade: FavoriteFacade = FavoriteRepository().apply {
-    runBlocking {
-        if (allFavorites().isEmpty()) {
         }
     }
 }

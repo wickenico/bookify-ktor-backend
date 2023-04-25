@@ -1,7 +1,7 @@
 package com.nw.plugins
 
 import com.nw.models.Favorite
-import com.nw.persistence.favoriteFacade
+import com.nw.persistence.FavoriteFacade
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.Application
 import io.ktor.server.application.call
@@ -16,7 +16,7 @@ import io.ktor.server.routing.route
 import io.ktor.server.routing.routing
 import io.ktor.server.util.getOrFail
 
-fun Application.configureFavorites() {
+fun Application.configureFavorites(favoriteFacade: FavoriteFacade) {
     routing {
         authenticate {
             route("/api/v1/favorites") {

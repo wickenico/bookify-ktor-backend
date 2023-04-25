@@ -6,7 +6,7 @@ import com.nw.enums.ReadStatusEnum
 import com.nw.models.Book
 import com.nw.models.BookTag
 import com.nw.models.Books
-import kotlinx.coroutines.runBlocking
+import com.nw.utils.bookFacade
 import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.andWhere
@@ -184,12 +184,5 @@ class BookRepository : BookFacade {
     override suspend fun getBookListFromBookTags(bookTags: List<BookTag>): List<Book> {
         val bookIds = bookTags.map { it.bookId }
         return bookFacade.findBookById(bookIds)
-    }
-}
-
-val bookFacade: BookFacade = BookRepository().apply {
-    runBlocking {
-        if (allBooksForFacade().isEmpty()) {
-        }
     }
 }

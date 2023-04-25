@@ -1,7 +1,7 @@
 package com.nw.plugins
 
 import com.nw.models.User
-import com.nw.persistence.userFacade
+import com.nw.persistence.UserFacade
 import com.nw.security.LoginBody
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.Application
@@ -17,7 +17,7 @@ import io.ktor.server.routing.route
 import io.ktor.server.routing.routing
 import io.ktor.server.sessions.set
 
-fun Application.authRoutes() {
+fun Application.authRoutes(userFacade: UserFacade) {
     routing {
         route("/api/v1/auth") {
             post("/register") {

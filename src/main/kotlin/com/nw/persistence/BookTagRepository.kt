@@ -2,7 +2,7 @@ package com.nw.persistence
 
 import com.nw.models.BookTag
 import com.nw.models.BookTags
-import kotlinx.coroutines.runBlocking
+import com.nw.utils.tagFacade
 import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.and
@@ -92,13 +92,6 @@ class BookTagRepository : BookTagFacade {
         return DatabaseFactory.dbQuery {
             BookTags.select { (BookTags.tagId eq tagId) and (BookTags.userId eq userId) }
                 .count()
-        }
-    }
-}
-
-val bookTagFacade: BookTagFacade = BookTagRepository().apply {
-    runBlocking {
-        if (getAllBookTags().isEmpty()) {
         }
     }
 }

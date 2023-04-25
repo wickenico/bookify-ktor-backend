@@ -4,8 +4,8 @@ import com.nw.enums.PrintTypeEnum
 import com.nw.enums.RatingEnum
 import com.nw.enums.ReadStatusEnum
 import com.nw.models.Book
-import com.nw.persistence.bookFacade
-import com.nw.persistence.userFacade
+import com.nw.persistence.BookFacade
+import com.nw.persistence.UserFacade
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.engine.cio.CIO
@@ -37,7 +37,7 @@ import java.time.Year
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 
-fun Application.configureGoogleBooksApiSearch() {
+fun Application.configureGoogleBooksApiSearch(bookFacade: BookFacade, userFacade: UserFacade) {
     routing {
         authenticate {
             get("/api/v1/search") {
