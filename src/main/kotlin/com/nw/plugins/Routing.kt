@@ -106,6 +106,8 @@ fun Application.configureBooks(bookFacade: BookFacade, bookTagFacade: BookTagFac
                             val user = userName?.let { it1 -> userFacade.findUserByUsername(it1) }
                             val bookTagsDeleted = bookTagFacade.deleteAllBookTagsByBookIdAndUserId(bookId, user!!.id)
                             if (bookTagsDeleted) {
+                                call.respondText("Book $bookId with tags successfully removed.", status = HttpStatusCode.Accepted)
+                            } else {
                                 call.respondText("Book $bookId successfully removed.", status = HttpStatusCode.Accepted)
                             }
                         }
