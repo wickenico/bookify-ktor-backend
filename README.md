@@ -8,6 +8,7 @@
 <p align="center">
   <a href="#built-with">Built With</a> •
   <a href="#key-features">Key Features</a> •
+  <a href="#future-tasks">Future Tasks</a> •
   <a href="#how-to-use">How To Use</a> •
   <a href="#related">Related</a> •
   <a href="#license">License</a>
@@ -36,10 +37,18 @@ This section should list any major frameworks/libraries used to bootstrap your p
 * Serialization with Jackson
 * StatusPages for HTTP Errorhandling
 
+## Future Tasks
+- Admin Tool
+- Implement service layer
+- Liquibase for db versioning
+- DTOs for object handling in requests
+- Tests!
+- Share function
+- Metrics
 
 ## How To Use
 
-To clone and run this application, you'll need [Git](https://git-scm.com) ainstalled on your computer. From your command line:
+To clone and run this application, you'll need [Git](https://git-scm.com) installed on your computer. From your command line:
 
 ```bash
 # Clone this repository
@@ -58,8 +67,6 @@ Frontend: https://github.com/wickenico/bookify-vuejs-frontend
 ## Related
 
 ## Support
-
-## You may also like...
 
 ## License
 
