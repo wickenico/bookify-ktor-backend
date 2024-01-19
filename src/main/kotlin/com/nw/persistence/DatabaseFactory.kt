@@ -18,9 +18,9 @@ import org.jetbrains.exposed.sql.transactions.transaction
 object DatabaseFactory {
     fun init() {
         val driverClassName = "com.mysql.cj.jdbc.Driver"
-        val jdbcURL = Constants.jdbcURL
-        val user = Constants.user
-        val password = Constants.password
+        val jdbcURL = Constants.JDBCURL
+        val user = Constants.USER
+        val password = Constants.PASSWORD
         val database = Database.connect(jdbcURL, driverClassName, user, password)
         transaction(database) {
             addLogger(StdOutSqlLogger)
@@ -28,6 +28,5 @@ object DatabaseFactory {
         }
     }
 
-    suspend fun <T> dbQuery(block: suspend () -> T): T =
-        newSuspendedTransaction(Dispatchers.IO) { block() }
+    suspend fun <T> dbQuery(block: suspend () -> T): T = newSuspendedTransaction(Dispatchers.IO) { block() }
 }

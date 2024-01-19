@@ -24,16 +24,17 @@ data class Book(
     var printType: PrintTypeEnum,
     var categories: List<String>,
     var maturityRating: String,
-    var language: String, // Enum?
+    var language: String,
     var infoLink: String,
     var rating: RatingEnum,
     var comment: String,
     var readStatus: ReadStatusEnum,
     var addedOnDate: OffsetDateTime,
-    var userId: Int
+    var userId: Int,
 ) {
     companion object {
         private val idCounter = AtomicInteger()
+
         fun newBook(
             isbn10: String,
             isbn13: String,
@@ -55,7 +56,7 @@ data class Book(
             comment: String,
             readStatus: ReadStatusEnum,
             addedOnDate: OffsetDateTime,
-            userId: Int
+            userId: Int,
         ) = Book(
             idCounter.getAndIncrement(),
             isbn10,
@@ -78,7 +79,7 @@ data class Book(
             comment,
             readStatus,
             addedOnDate,
-            userId
+            userId,
         )
     }
 }

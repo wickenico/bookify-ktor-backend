@@ -11,8 +11,11 @@ import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
 
 class OffsetDateTimeSerializer : StdSerializer<OffsetDateTime>(OffsetDateTime::class.java) {
-
-    override fun serialize(value: OffsetDateTime?, gen: JsonGenerator?, provider: SerializerProvider?) {
+    override fun serialize(
+        value: OffsetDateTime?,
+        gen: JsonGenerator?,
+        provider: SerializerProvider?,
+    ) {
         if (value == null) {
             gen?.writeNull()
         } else {
@@ -22,8 +25,10 @@ class OffsetDateTimeSerializer : StdSerializer<OffsetDateTime>(OffsetDateTime::c
 }
 
 class OffsetDateTimeDeserializer : StdDeserializer<OffsetDateTime>(OffsetDateTime::class.java) {
-
-    override fun deserialize(p: JsonParser?, ctxt: DeserializationContext?): OffsetDateTime {
+    override fun deserialize(
+        p: JsonParser?,
+        ctxt: DeserializationContext?,
+    ): OffsetDateTime {
         val value = p?.valueAsString
         return if (value == null) {
             throw SerializationException("Cannot deserialize OffsetDateTime from null value")

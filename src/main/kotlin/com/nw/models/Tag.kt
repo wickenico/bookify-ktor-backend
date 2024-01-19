@@ -6,18 +6,18 @@ import java.util.concurrent.atomic.AtomicInteger
 data class Tag(
     val id: Int,
     val name: String,
-    val userId: Int
+    val userId: Int,
 ) {
     companion object {
         private val idCounter = AtomicInteger()
+
         fun newTag(
             name: String,
-            userId: Int
+            userId: Int,
         ) = Tag(
             idCounter.getAndIncrement(),
             name,
-            userId
-
+            userId,
         )
     }
 }

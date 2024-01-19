@@ -37,22 +37,26 @@ import java.time.Year
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 
-fun Application.configureGoogleBooksApiSearch(bookFacade: BookFacade, userFacade: UserFacade) {
+fun Application.configureGoogleBooksApiSearch(
+    bookFacade: BookFacade,
+    userFacade: UserFacade,
+) {
     routing {
         authenticate {
             get("/api/v1/search") {
                 val isbn = call.request.queryParameters.getOrFail("isbn").toLong()
-                val client = HttpClient(CIO) {
-                    expectSuccess = true
-                    install(ContentNegotiation) {
-                        json(
-                            Json {
-                                prettyPrint = true
-                                isLenient = true
-                            }
-                        )
+                val client =
+                    HttpClient(CIO) {
+                        expectSuccess = true
+                        install(ContentNegotiation) {
+                            json(
+                                Json {
+                                    prettyPrint = true
+                                    isLenient = true
+                                },
+                            )
+                        }
                     }
-                }
                 val response: HttpResponse =
                     client.get("https://www.googleapis.com/books/v1/volumes?q=isbn:$isbn&country=DE&maxResults=2")
                 println(response.status)
@@ -146,11 +150,12 @@ fun Application.configureGoogleBooksApiSearch(bookFacade: BookFacade, userFacade
                     var publishedDate = volumeInfoObject?.get("publishedDate")?.jsonPrimitive?.content
                     val formatterYear = DateTimeFormatter.ofPattern("yyyy")
                     val formatterDate = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-                    val year = try {
-                        Year.parse(publishedDate, formatterYear)
-                    } catch (ex: Exception) {
-                        null
-                    }
+                    val year =
+                        try {
+                            Year.parse(publishedDate, formatterYear)
+                        } catch (ex: Exception) {
+                            null
+                        }
                     val localDate = year?.atDay(1) ?: LocalDate.parse(publishedDate, formatterDate)
                     val localDateTime = localDate.atStartOfDay()
                     val offset = OffsetTime.of(0, 0, 0, 0, ZoneOffset.UTC).offset
@@ -202,29 +207,30 @@ fun Application.configureGoogleBooksApiSearch(bookFacade: BookFacade, userFacade
 
                     client.close()
 
-                    val book = Book.newBook(
-                        isbn10,
-                        isbn13,
-                        title,
-                        subtitle,
-                        authorsList,
-                        publisher,
-                        pages,
-                        imageUrl,
-                        selfLink,
-                        publishedDateOffsetDateTime,
-                        description,
-                        PrintTypeEnum.getByValue(printType),
-                        categoriesList,
-                        maturityRating,
-                        language,
-                        infoLink,
-                        RatingEnum.getByValue(rating),
-                        comment,
-                        ReadStatusEnum.getByValue(readStatus),
-                        addedOnDate,
-                        userId
-                    )
+                    val book =
+                        Book.newBook(
+                            isbn10,
+                            isbn13,
+                            title,
+                            subtitle,
+                            authorsList,
+                            publisher,
+                            pages,
+                            imageUrl,
+                            selfLink,
+                            publishedDateOffsetDateTime,
+                            description,
+                            PrintTypeEnum.getByValue(printType),
+                            categoriesList,
+                            maturityRating,
+                            language,
+                            infoLink,
+                            RatingEnum.getByValue(rating),
+                            comment,
+                            ReadStatusEnum.getByValue(readStatus),
+                            addedOnDate,
+                            userId,
+                        )
 
                     call.respond(book)
                 }

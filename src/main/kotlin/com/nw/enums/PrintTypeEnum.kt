@@ -3,7 +3,8 @@ package com.nw.enums
 enum class PrintTypeEnum(val type: String) {
     BOOK("BOOK"),
     EBOOK("EBOOK"),
-    MAGAZINE("MAGAZINE");
+    MAGAZINE("MAGAZINE"),
+    ;
 
     companion object {
         fun getByValue(type: String): PrintTypeEnum {

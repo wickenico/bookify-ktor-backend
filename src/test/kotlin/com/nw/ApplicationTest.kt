@@ -10,13 +10,14 @@ import org.junit.Test
 
 class ApplicationTest {
     @Test
-    fun testRoot() = testApplication {
-        application {
-            configureBooks(bookFacade, bookTagFacade, tagFacade, userFacade)
-        }
+    fun testRoot() =
+        testApplication {
+            application {
+                configureBooks(bookFacade, bookTagFacade, tagFacade, userFacade)
+            }
 //        client.get("/").apply {
 //            assertEquals(HttpStatusCode.OK, status)
 //            assertEquals("Hello World!", bodyAsText())
 //        }
-    }
+        }
 }

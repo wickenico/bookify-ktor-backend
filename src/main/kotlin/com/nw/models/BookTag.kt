@@ -6,7 +6,7 @@ data class BookTag(
     val id: Int,
     val bookId: Int,
     val tagId: Int,
-    val userId: Int
+    val userId: Int,
 )
 
 object BookTags : Table() {

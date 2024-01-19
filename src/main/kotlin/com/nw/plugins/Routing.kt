@@ -26,7 +26,12 @@ import io.ktor.server.routing.route
 import io.ktor.server.routing.routing
 import io.ktor.server.util.getOrFail
 
-fun Application.configureBooks(bookFacade: BookFacade, bookTagFacade: BookTagFacade, tagFacade: TagFacade, userFacade: UserFacade) {
+fun Application.configureBooks(
+    bookFacade: BookFacade,
+    bookTagFacade: BookTagFacade,
+    tagFacade: TagFacade,
+    userFacade: UserFacade,
+) {
     routing {
         authenticate {
             get("/") {
@@ -52,29 +57,30 @@ fun Application.configureBooks(bookFacade: BookFacade, bookTagFacade: BookTagFac
 
                 post {
                     val book = call.receive<Book>()
-                    val newBook: Book? = bookFacade.addNewBook(
-                        isbn10 = book.isbn10,
-                        isbn13 = book.isbn13,
-                        title = book.title,
-                        subtitle = book.subtitle,
-                        authors = book.authors,
-                        publisher = book.publisher,
-                        pages = book.pages,
-                        imageUrl = book.imageUrl,
-                        selfLink = book.selfLink,
-                        publishedDate = book.publishedDate,
-                        description = book.description,
-                        printType = PrintTypeEnum.getByValue(book.printType.toString()),
-                        categories = book.categories,
-                        maturityRating = book.maturityRating,
-                        language = book.language,
-                        infoLink = book.infoLink,
-                        rating = RatingEnum.getByString(book.rating.toString()),
-                        comment = book.comment,
-                        readStatus = ReadStatusEnum.getByValue(book.readStatus.toString()),
-                        addedOnDate = book.addedOnDate,
-                        userId = book.userId
-                    )
+                    val newBook: Book? =
+                        bookFacade.addNewBook(
+                            isbn10 = book.isbn10,
+                            isbn13 = book.isbn13,
+                            title = book.title,
+                            subtitle = book.subtitle,
+                            authors = book.authors,
+                            publisher = book.publisher,
+                            pages = book.pages,
+                            imageUrl = book.imageUrl,
+                            selfLink = book.selfLink,
+                            publishedDate = book.publishedDate,
+                            description = book.description,
+                            printType = PrintTypeEnum.getByValue(book.printType.toString()),
+                            categories = book.categories,
+                            maturityRating = book.maturityRating,
+                            language = book.language,
+                            infoLink = book.infoLink,
+                            rating = RatingEnum.getByString(book.rating.toString()),
+                            comment = book.comment,
+                            readStatus = ReadStatusEnum.getByValue(book.readStatus.toString()),
+                            addedOnDate = book.addedOnDate,
+                            userId = book.userId,
+                        )
                     if (newBook != null) {
                         call.respond(HttpStatusCode.Created, newBook)
                     }
@@ -84,11 +90,14 @@ fun Application.configureBooks(bookFacade: BookFacade, bookTagFacade: BookTagFac
                     val id = call.parameters["id"]?.toInt() ?: return@put call.respond(HttpStatusCode.BadRequest)
                     val book = call.receive<Book>()
 
-                    val edited = bookFacade.editBook(
-                        id, book.isbn10, book.isbn13, book.title, book.subtitle, book.authors, book.publisher, book.pages, book.imageUrl, book.selfLink,
-                        book.publishedDate, book.description, book.printType, book.categories, book.maturityRating, book.language, book.infoLink, book.rating,
-                        book.comment, book.readStatus, book.addedOnDate
-                    )
+                    val edited =
+                        bookFacade.editBook(
+                            id, book.isbn10, book.isbn13, book.title, book.subtitle, book.authors, book.publisher,
+                            book.pages, book.imageUrl, book.selfLink,
+                            book.publishedDate, book.description, book.printType, book.categories, book.maturityRating,
+                            book.language, book.infoLink, book.rating,
+                            book.comment, book.readStatus, book.addedOnDate,
+                        )
                     if (edited) {
                         val updatedBook = bookFacade.book(id)
                         call.respond(HttpStatusCode.OK, updatedBook!!)

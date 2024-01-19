@@ -22,7 +22,10 @@ import io.ktor.server.routing.route
 import io.ktor.server.routing.routing
 import io.ktor.server.util.getOrFail
 
-fun Application.configureUser(bookFacade: BookFacade, userFacade: UserFacade) {
+fun Application.configureUser(
+    bookFacade: BookFacade,
+    userFacade: UserFacade,
+) {
     routing {
         authenticate {
             route("/api/v1/users") {
@@ -88,11 +91,12 @@ fun Application.configureUser(bookFacade: BookFacade, userFacade: UserFacade) {
                     val id = call.parameters["id"]?.toInt() ?: return@put call.respond(HttpStatusCode.BadRequest)
                     val editUser = call.receive<UserEdit>()
 
-                    val edited = userFacade.editUser(
-                        id,
-                        editUser.fullName,
-                        editUser.email
-                    )
+                    val edited =
+                        userFacade.editUser(
+                            id,
+                            editUser.fullName,
+                            editUser.email,
+                        )
 
                     if (edited) {
                         val updatedUser = userFacade.user(id)

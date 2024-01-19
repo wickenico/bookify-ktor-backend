@@ -22,7 +22,12 @@ import io.ktor.server.routing.route
 import io.ktor.server.routing.routing
 import io.ktor.server.util.getOrFail
 
-fun Application.configureTag(tagFacade: TagFacade, bookFacade: BookFacade, bookTagFacade: BookTagFacade, userFacade: UserFacade) {
+fun Application.configureTag(
+    tagFacade: TagFacade,
+    bookFacade: BookFacade,
+    bookTagFacade: BookTagFacade,
+    userFacade: UserFacade,
+) {
     routing {
         authenticate {
             route("api/v1/tags") {

@@ -9,7 +9,7 @@ data class User(
     val fullName: String,
     val email: String,
     val username: String,
-    val password: String
+    val password: String,
 )
 
 object Users : Table() {

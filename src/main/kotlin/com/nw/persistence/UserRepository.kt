@@ -17,25 +17,26 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import org.jetbrains.exposed.sql.update
 
 class UserRepository : UserFacade {
-
     private fun resultRowToUser(row: ResultRow) =
         User(
             id = row[Users.id],
             fullName = row[Users.fullName],
             email = row[Users.email],
             username = row[Users.username],
-            password = row[Users.password]
+            password = row[Users.password],
         )
 
-    override suspend fun allUsers(): List<User> = DatabaseFactory.dbQuery {
-        Users.selectAll().map(::resultRowToUser)
-    }
+    override suspend fun allUsers(): List<User> =
+        DatabaseFactory.dbQuery {
+            Users.selectAll().map(::resultRowToUser)
+        }
 
-    override suspend fun user(id: Int): User? = DatabaseFactory.dbQuery {
-        Users.select { Users.id eq id }
-            .map(::resultRowToUser)
-            .singleOrNull()
-    }
+    override suspend fun user(id: Int): User? =
+        DatabaseFactory.dbQuery {
+            Users.select { Users.id eq id }
+                .map(::resultRowToUser)
+                .singleOrNull()
+        }
 
     override suspend fun findUserByUsername(username: String): User? {
         return DatabaseFactory.dbQuery {
@@ -45,7 +46,10 @@ class UserRepository : UserFacade {
         }
     }
 
-    override suspend fun findUserByUsernameAndPassword(user: String, password: String): User? =
+    override suspend fun findUserByUsernameAndPassword(
+        user: String,
+        password: String,
+    ): User? =
         DatabaseFactory.dbQuery {
             Users.select { Users.username eq user }
                 .andWhere { Users.password eq password }
@@ -66,12 +70,17 @@ class UserRepository : UserFacade {
         }
     }
 
-    override suspend fun editUser(userId: Int, fullName: String, email: String): Boolean = DatabaseFactory.dbQuery {
-        Users.update({ Users.id eq userId }) {
-            it[Users.fullName] = fullName
-            it[Users.email] = email
-        } > 0
-    }
+    override suspend fun editUser(
+        userId: Int,
+        fullName: String,
+        email: String,
+    ): Boolean =
+        DatabaseFactory.dbQuery {
+            Users.update({ Users.id eq userId }) {
+                it[Users.fullName] = fullName
+                it[Users.email] = email
+            } > 0
+        }
 
     override suspend fun deleteUser(id: Int): Boolean {
         return transaction {
@@ -79,17 +88,22 @@ class UserRepository : UserFacade {
         }
     }
 
-    override suspend fun getUser(username: String, password: String): User? = DatabaseFactory.dbQuery {
-        Users.select { Users.username eq username }
-            .andWhere { Users.password eq hash(password) }
-            .map(::resultRowToUser)
-            .singleOrNull()
-    }
+    override suspend fun getUser(
+        username: String,
+        password: String,
+    ): User? =
+        DatabaseFactory.dbQuery {
+            Users.select { Users.username eq username }
+                .andWhere { Users.password eq hash(password) }
+                .map(::resultRowToUser)
+                .singleOrNull()
+        }
 
     override suspend fun checkIfUsernameExists(username: String): Boolean {
         return DatabaseFactory.dbQuery {
-            val count = Users.select { Users.username eq username }
-                .count()
+            val count =
+                Users.select { Users.username eq username }
+                    .count()
 
             count > 0
         }
@@ -100,15 +114,23 @@ class UserRepository : UserFacade {
         return bookFacade.findBookById(bookIds)
     }
 
-    override suspend fun verifyUser(userId: Int, password: String): Boolean = DatabaseFactory.dbQuery {
-        Users.select { Users.id eq userId }
-            .andWhere { Users.password eq hash(password) }
-            .singleOrNull() != null
-    }
+    override suspend fun verifyUser(
+        userId: Int,
+        password: String,
+    ): Boolean =
+        DatabaseFactory.dbQuery {
+            Users.select { Users.id eq userId }
+                .andWhere { Users.password eq hash(password) }
+                .singleOrNull() != null
+        }
 
-    override suspend fun changePassword(userId: Int, newPassword: String): Boolean = DatabaseFactory.dbQuery {
-        Users.update({ Users.id eq userId }) {
-            it[Users.password] = hash(newPassword)
-        } > 0
-    }
+    override suspend fun changePassword(
+        userId: Int,
+        newPassword: String,
+    ): Boolean =
+        DatabaseFactory.dbQuery {
+            Users.update({ Users.id eq userId }) {
+                it[Users.password] = hash(newPassword)
+            } > 0
+        }
 }

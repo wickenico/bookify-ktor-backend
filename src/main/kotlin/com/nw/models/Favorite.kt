@@ -5,7 +5,7 @@ import org.jetbrains.exposed.sql.Table
 data class Favorite(
     val id: Int,
     val userId: Int,
-    val bookId: Int
+    val bookId: Int,
 )
 
 object Favorites : Table() {

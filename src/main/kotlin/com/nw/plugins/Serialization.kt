@@ -23,7 +23,7 @@ fun Application.configureSerialization() {
                     .build().apply {
                         addSerializer(OffsetDateTime::class.java, OffsetDateTimeSerializer())
                         addDeserializer(OffsetDateTime::class.java, OffsetDateTimeDeserializer())
-                    }
+                    },
             )
         }
     }

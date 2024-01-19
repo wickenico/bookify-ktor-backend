@@ -13,26 +13,32 @@ import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 
 class FavoriteRepository : FavoriteFacade {
+    private fun resultRowToFavorite(row: ResultRow) =
+        Favorite(
+            id = row[Favorites.id],
+            userId = row[Favorites.userId],
+            bookId = row[Favorites.bookId],
+        )
 
-    private fun resultRowToFavorite(row: ResultRow) = Favorite(
-        id = row[Favorites.id],
-        userId = row[Favorites.userId],
-        bookId = row[Favorites.bookId]
-    )
-
-    override suspend fun allFavorites(): List<Favorite> = DatabaseFactory.dbQuery {
-        Favorites.selectAll().map(::resultRowToFavorite)
-    }
-
-    override suspend fun addNewFavorite(favorite: Favorite): Favorite? = DatabaseFactory.dbQuery {
-        val insertStatement = Favorites.insert {
-            it[Favorites.userId] = favorite.userId
-            it[Favorites.bookId] = favorite.bookId
+    override suspend fun allFavorites(): List<Favorite> =
+        DatabaseFactory.dbQuery {
+            Favorites.selectAll().map(::resultRowToFavorite)
         }
-        insertStatement.resultedValues?.singleOrNull()?.let(::resultRowToFavorite)
-    }
 
-    override suspend fun deleteFavorite(userId: Int, bookId: Int): Boolean {
+    override suspend fun addNewFavorite(favorite: Favorite): Favorite? =
+        DatabaseFactory.dbQuery {
+            val insertStatement =
+                Favorites.insert {
+                    it[Favorites.userId] = favorite.userId
+                    it[Favorites.bookId] = favorite.bookId
+                }
+            insertStatement.resultedValues?.singleOrNull()?.let(::resultRowToFavorite)
+        }
+
+    override suspend fun deleteFavorite(
+        userId: Int,
+        bookId: Int,
+    ): Boolean {
         return transaction {
             Favorites.deleteWhere {
                 (Favorites.userId eq userId) and (Favorites.bookId eq bookId)
@@ -40,22 +46,28 @@ class FavoriteRepository : FavoriteFacade {
         }
     }
 
-    override suspend fun findFavoriteById(id: Int): Favorite? = DatabaseFactory.dbQuery {
-        Favorites.select { Favorites.id eq id }
-            .map { resultRowToFavorite(it) }
-            .singleOrNull()
-    }
+    override suspend fun findFavoriteById(id: Int): Favorite? =
+        DatabaseFactory.dbQuery {
+            Favorites.select { Favorites.id eq id }
+                .map { resultRowToFavorite(it) }
+                .singleOrNull()
+        }
 
-    override suspend fun findAllFavoritesByUserId(userId: Int): List<Favorite> = DatabaseFactory.dbQuery {
-        Favorites.select { Favorites.userId eq userId }
-            .map(::resultRowToFavorite)
-    }
+    override suspend fun findAllFavoritesByUserId(userId: Int): List<Favorite> =
+        DatabaseFactory.dbQuery {
+            Favorites.select { Favorites.userId eq userId }
+                .map(::resultRowToFavorite)
+        }
 
-    override suspend fun isBookMarkedAsFavorite(userId: Int, bookId: Int): Boolean {
+    override suspend fun isBookMarkedAsFavorite(
+        userId: Int,
+        bookId: Int,
+    ): Boolean {
         return DatabaseFactory.dbQuery {
-            val count = Favorites.select { Favorites.userId eq userId }
-                .andWhere { Favorites.bookId eq bookId }
-                .count()
+            val count =
+                Favorites.select { Favorites.userId eq userId }
+                    .andWhere { Favorites.bookId eq bookId }
+                    .count()
 
             count > 0
         }

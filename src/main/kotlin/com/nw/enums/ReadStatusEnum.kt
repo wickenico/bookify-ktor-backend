@@ -4,7 +4,8 @@ enum class ReadStatusEnum(val status: String) {
     UNREAD("UNREAD"),
     READING("READING"),
     READ("READ"),
-    UNFINISHED("UNFINISHED");
+    UNFINISHED("UNFINISHED"),
+    ;
 
     companion object {
         fun getByValue(status: String): ReadStatusEnum {

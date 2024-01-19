@@ -6,7 +6,8 @@ enum class RatingEnum(val rating: Int) {
     TWO(2),
     THREE(3),
     FOUR(4),
-    FIVE(5);
+    FIVE(5),
+    ;
 
     companion object {
         fun getByValue(rating: Int): RatingEnum {
