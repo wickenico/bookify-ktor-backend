@@ -1,5 +1,5 @@
 [versions]
-exposedVersion = "0.43.0"
+exposedVersion = "0.46.0"
 # @keep
 jvmTargetVersion = "19"
 kotlinVersion = "1.9.21"
