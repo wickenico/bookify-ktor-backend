@@ -9,7 +9,7 @@ logbackVersion = "1.5.3"
 mysqlConnectorVersion = "8.0.33"
 swaggerCodegenVersion = "1.0.47"
 versionCatalogUpdateVersion = "0.8.4"
-versionUpdateVersion = "0.50.0"
+versionUpdateVersion = "0.51.0"
 
 [libraries]
 exposedCore = { module = "org.jetbrains.exposed:exposed-core", version.ref = "exposedVersion" }
